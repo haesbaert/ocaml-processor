@@ -1,0 +1,7 @@
+(library
+ (name cpu)
+ (libraries unix)
+ (foreign_stubs
+   (language c)
+   (names cpu_linux_stubs))
+   (c_library_flags (-lpthread)))
