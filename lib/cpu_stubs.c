@@ -14,7 +14,6 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-/* Basic OS check */
 #if !defined(__linux__) && !defined(__APPLE__) && \
     !defined(__FreeBSD__) && !defined(__OpenBSD__) && \
     !defined(__NetBSD__) && !defined(__DragonFly__)
@@ -22,15 +21,13 @@
 #endif
 
 /*
- * Our portable API
+ * ""Portable"" num_cpu()
  */
 int	num_cpu(void);
 int	num_cpu_online(void);
 
 /*
- *
- *    LINUX
- *
+ *    Linux
  */
 #ifdef __linux__
 
@@ -47,11 +44,8 @@ int	num_cpu_online(void);
 #undef _GNU_SOURCE
 #endif	/* __linux__ */
 
-
 /*
- *
  *    Darwin - __APPLE__
- *
  */
 #ifdef __APPLE__
 
@@ -60,11 +54,8 @@ int	num_cpu_online(void);
 
 #endif	/* endif __APPLE__ */
 
-
 /*
- *
  *    FreeBSD
- *
  */
 #ifdef __FreeBSD__
 
@@ -73,11 +64,8 @@ int	num_cpu_online(void);
 
 #endif	/* endif __FreeBSD__ */
 
-
 /*
- *
  *    OpenBSD
- *
  */
 #ifdef __OpenBSD__
 
@@ -86,11 +74,8 @@ int	num_cpu_online(void);
 
 #endif	/* endif __OpenBSD__ */
 
-
 /*
- *
  *    NetBSD
- *
  */
 #ifdef __NetBSD__
 
@@ -99,11 +84,8 @@ int	num_cpu_online(void);
 
 #endif	/* endif __NetBSD__ */
 
-
 /*
- *
  *    DragonFly
- *
  */
 #ifdef __DrafonFly__
 
@@ -112,11 +94,8 @@ int	num_cpu_online(void);
 
 #endif	/* endif __DragonFly__ */
 
-
 /*
- *
  *    Ocaml includes
- *
  */
 #include "caml/memory.h"
 #include "caml/fail.h"
@@ -126,13 +105,9 @@ int	num_cpu_online(void);
 #include "caml/custom.h"
 #include "caml/bigarray.h"
 
-
 /*
- *
  *    num_cpu() and num_cpu_online()
- *
  */
-
 #if defined(USE_NUM_CPU_SYSCONF)
 
 #include <unistd.h>
@@ -183,8 +158,9 @@ num_cpu_bsd(int hw)
 #error Dont know which num_cpu to use :-(
 #endif	/* USE_NUM_CPU_* */
 
-/* Ocaml FFI */
-
+/*
+ * Ocaml FFI
+ */
 CAMLprim value
 caml_num_cpu(value vunit)
 {
@@ -211,15 +187,10 @@ caml_num_cpu_online(value vunit)
 	CAMLreturn (Val_int(n));
 }
 
-
 /*
- *
  *    set_affinity() and get_affinity()
- *
  */
 #if defined(USE_LINUX_AFFINITY)
-
-
 
 CAMLprim value
 caml_set_affinity(value cpulist)
