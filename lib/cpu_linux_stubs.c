@@ -17,8 +17,9 @@
 #define _GNU_SOURCE
 
 #include <sys/sysinfo.h>
-#include <sched.h>
+#include <errno.h>
 #include <pthread.h>
+#include <sched.h>
 
 /* #include "caml/alloc.h" */
 /* #include "caml/memory.h" */
@@ -46,25 +47,25 @@ caml_num_threads(value vunit)
 
 	CAMLreturn (Val_int(n));
 }
-#if 1
+
 CAMLprim value
 caml_set_affinity(value cpulist)
 {
 	CAMLparam1(cpulist);
 	CAMLlocal1(cpu);
 	cpu_set_t *cpuset;
-	int num_cpus;
+	int numcpus, error;
 	long cpuid;
 	size_t sz;
 
 	caml_enter_blocking_section();
-	num_cpus = get_nprocs_conf();
-	cpuset = CPU_ALLOC(num_cpus);
+	numcpus = get_nprocs_conf();
+	cpuset = CPU_ALLOC(numcpus);
 	caml_leave_blocking_section();
 	if (cpuset == NULL)
 		uerror("CPU_ALLOC", Nothing);
 
-	sz = CPU_ALLOC_SIZE(num_cpus);
+	sz = CPU_ALLOC_SIZE(numcpus);
 	CPU_ZERO_S(sz, cpuset);
 
 	for (cpu = cpulist; cpu != Val_emptylist; cpu = Field(cpu, 1)) {
@@ -72,16 +73,61 @@ caml_set_affinity(value cpulist)
 		CPU_SET_S(cpuid, sz, cpuset);
 	}
 
-	if (pthread_setaffinity_np(pthread_self(), sz, cpuset) != 0) {
+	error = pthread_setaffinity_np(pthread_self(), sz, cpuset);
+	if (error != 0) {
+		errno = error;	/* Yes, errno is not set */
 		caml_enter_blocking_section();
 		CPU_FREE(cpuset);
 		caml_leave_blocking_section();
 		uerror("pthread_setaffinity_np", Nothing);
 	}
+
 	caml_enter_blocking_section();
 	CPU_FREE(cpuset);
 	caml_leave_blocking_section();
 
 	CAMLreturn (Val_unit);
 }
-#endif
+
+CAMLprim value
+caml_get_affinity(value unit)
+{
+	cpu_set_t *cpuset;
+	int numcpus, error, cpuid;
+	size_t sz;
+	CAMLparam0();
+	CAMLlocal2(cpulist, cpu);
+
+	caml_enter_blocking_section();
+	numcpus = get_nprocs_conf();
+	cpuset = CPU_ALLOC(numcpus);
+	caml_leave_blocking_section();
+	if (cpuset == NULL)
+		uerror("CPU_ALLOC", Nothing);
+
+	sz = CPU_ALLOC_SIZE(numcpus);
+	CPU_ZERO_S(sz, cpuset);
+
+	error = pthread_getaffinity_np(pthread_self(), sz, cpuset);
+	if (error != 0) {
+		errno = error;	/* Yes, errno is not set */
+		caml_enter_blocking_section();
+		CPU_FREE(cpuset);
+		caml_leave_blocking_section();
+		uerror("pthread_setaffinity_np", Nothing);
+	}
+
+	for (cpuid = numcpus - 1; cpuid >= 0; cpuid--) {
+		if (!CPU_ISSET_S(cpuid, sz, cpuset))
+			continue;
+		cpu = caml_alloc_2(0, Val_int(cpuid), cpulist);
+		cpulist = cpu;
+	}
+
+	caml_enter_blocking_section();
+	CPU_FREE(cpuset);
+	caml_leave_blocking_section();
+
+	/* XXX-Check An empty list is really just an `uninitiliazed` value ? */
+	CAMLreturn (cpulist);
+}
