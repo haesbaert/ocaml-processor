@@ -3,5 +3,5 @@
  (libraries unix)
  (foreign_stubs
    (language c)
-   (names cpu_linux_stubs))
+   (names cpu_stubs))
    (c_library_flags (-lpthread)))

@@ -21,12 +21,6 @@
 #include <pthread.h>
 #include <sched.h>
 
-/* #include "caml/alloc.h" */
-/* #include "caml/memory.h" */
-/* #include "caml/misc.h" */
-/* #include "caml/signals.h" */
-/* #include "caml/unixsupport.h" */
-
 #include "caml/memory.h"
 #include "caml/fail.h"
 #include "caml/unixsupport.h"
@@ -34,6 +28,10 @@
 #include "caml/alloc.h"
 #include "caml/custom.h"
 #include "caml/bigarray.h"
+
+#ifdef __linux__
+
+#endif
 
 CAMLprim value
 caml_num_threads(value vunit)
