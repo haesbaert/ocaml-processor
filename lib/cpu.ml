@@ -14,6 +14,6 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-external num_threads: unit -> int = "caml_num_threads"
+external num_cpu: unit -> int = "caml_num_cpu"
 external set_affinity: int list -> unit = "caml_set_affinity"
 external get_affinity: unit -> int list = "caml_get_affinity"

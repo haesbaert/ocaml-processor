@@ -18,7 +18,7 @@ let rec hang () =
   hang ()
 
 let _ =
-  Printf.printf "We haz %d threads\n%!" (Cpu.num_threads ());
+  Printf.printf "We haz %d threads\n%!" (Cpu.num_cpu ());
   Printf.printf "Pinning us to 0-1\n%!";
   Cpu.set_affinity [0; 1];
   List.iter (fun cpuid -> Printf.printf "Seen cpu %d\n%!" cpuid) (Cpu.get_affinity ());
