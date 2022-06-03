@@ -286,7 +286,7 @@ caml_get_affinity(value unit)
 		caml_enter_blocking_section();
 		CPU_FREE(cpuset);
 		caml_leave_blocking_section();
-		uerror("pthread_setaffinity_np", Nothing);
+		uerror("pthread_getaffinity_np", Nothing);
 	}
 
 	for (cpuid = numcpus - 1; cpuid >= 0; cpuid--) {
