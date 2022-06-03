@@ -81,8 +81,21 @@ int	num_cpu_online(void);
  */
 #ifdef __NetBSD__
 
+#include <pthread.h>
+#include <sched.h>
+
 #define USE_NUM_CPU_SYSCONF
-#define USE_NOP_AFFINITY
+#define USE_LINUX_AFFINITY
+
+/* Mini compat layer for linux affinity */
+typedef cpu_set_t cpuset_t;
+#define CPU_ALLOC(_n)		cpuset_create()
+#define	CPU_FREE(cs)		cpuset_destroy(c)
+#define	CPU_ALLOC_SIZE(c)	cpuset_size(c)
+#define	CPU_ZERO_S(_s, c)	cpuset_zero(c)
+#define	CPU_ISSET_S(i, _s, c)	cpuset_isset(i, c)
+#define	CPU_SET_S(i, _s, c)	cpuset_set(i, c)
+#define	CPU_CLR_S(i, _s, c)	cpuset_clear(i, c)
 
 #endif	/* endif __NetBSD__ */
 
