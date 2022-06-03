@@ -244,8 +244,8 @@ caml_get_affinity(value unit)
 	CAMLparam0();
 	CAMLlocal2(cpulist, cpu);
 
-	numcpus = num_cpu();
 	caml_enter_blocking_section();
+	numcpus = num_cpu();
 	cpuset = CPU_ALLOC(numcpus);
 	caml_leave_blocking_section();
 	if (cpuset == NULL)
@@ -294,7 +294,9 @@ caml_get_affinity(value unit)
 	CAMLlocal2(cpulist, cpu);
 	int cpuid, numcpus;
 
+	caml_enter_blocking_section();
 	numcpus = num_cpu();
+	caml_leave_blocking_section();
 	/* Assume affinity is all, since we can't set or get */
 	for (cpuid = numcpus - 1; cpuid >= 0; cpuid--) {
 		cpu = caml_alloc_2(0, Val_int(cpuid), cpulist);
