@@ -59,8 +59,10 @@ int	num_cpu_online(void);
  */
 #ifdef __FreeBSD__
 
+#include <pthread_np.h>		/* Has CPU_ macros */
+
 #define USE_NUM_CPU_SYSCONF
-#define USE_NOP_AFFINITY
+#define USE_LINUX_AFFINITY	/* Nice enough to have compat */
 
 #endif	/* endif __FreeBSD__ */
 
@@ -289,8 +291,17 @@ CAMLprim value
 caml_get_affinity(value unit)
 {
 	CAMLparam0();
+	CAMLlocal2(cpulist, cpu);
+	int cpuid, numcpus;
 
-	CAMLreturn (Val_unit);
+	numcpus = num_cpu();
+	/* Assume affinity is all, since we can't set or get */
+	for (cpuid = numcpus - 1; cpuid >= 0; cpuid--) {
+		cpu = caml_alloc_2(0, Val_int(cpuid), cpulist);
+		cpulist = cpu;
+	}
+
+	CAMLreturn (cpulist);
 }
 
 #else  /* USE_*_AFFINITY */
