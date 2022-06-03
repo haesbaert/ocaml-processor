@@ -59,7 +59,13 @@ int	num_cpu_online(void);
  */
 #ifdef __FreeBSD__
 
+#include <errno.h>
+#include <pthread.h>
 #include <pthread_np.h>		/* Has CPU_ macros */
+
+#include <sys/cpuset.h>
+
+typedef cpuset_t cpu_set_t;
 
 #define USE_NUM_CPU_SYSCONF
 #define USE_LINUX_AFFINITY	/* Nice enough to have compat */
@@ -81,6 +87,7 @@ int	num_cpu_online(void);
  */
 #ifdef __NetBSD__
 
+#include <errno.h>
 #include <pthread.h>
 #include <sched.h>
 
@@ -225,38 +232,26 @@ caml_set_affinity(value cpulist)
 {
 	CAMLparam1(cpulist);
 	CAMLlocal1(cpu);
-	cpu_set_t *cpuset;
+	cpu_set_t cpuset;
 	int numcpus, error;
 	long cpuid;
-	size_t sz;
 
 	caml_enter_blocking_section();
 	numcpus = num_cpu();
-	cpuset = CPU_ALLOC(numcpus);
 	caml_leave_blocking_section();
-	if (cpuset == NULL)
-		uerror("CPU_ALLOC", Nothing);
 
-	sz = CPU_ALLOC_SIZE(numcpus);
-	CPU_ZERO_S(sz, cpuset);
+	CPU_ZERO(&cpuset);
 
 	for (cpu = cpulist; cpu != Val_emptylist; cpu = Field(cpu, 1)) {
 		cpuid = Long_val(Field(cpu, 0));
-		CPU_SET_S(cpuid, sz, cpuset);
+		CPU_SET(cpuid, &cpuset);
 	}
 
-	error = pthread_setaffinity_np(pthread_self(), sz, cpuset);
+	error = pthread_setaffinity_np(pthread_self(), sizeof(cpuset), &cpuset);
 	if (error != 0) {
 		errno = error;	/* Yes, errno is not set */
-		caml_enter_blocking_section();
-		CPU_FREE(cpuset);
-		caml_leave_blocking_section();
 		uerror("pthread_setaffinity_np", Nothing);
 	}
-
-	caml_enter_blocking_section();
-	CPU_FREE(cpuset);
-	caml_leave_blocking_section();
 
 	CAMLreturn (Val_unit);
 }
@@ -264,41 +259,32 @@ caml_set_affinity(value cpulist)
 CAMLprim value
 caml_get_affinity(value unit)
 {
-	cpu_set_t *cpuset;
+	cpu_set_t cpuset;
 	int numcpus, error, cpuid;
-	size_t sz;
 	CAMLparam0();
 	CAMLlocal2(cpulist, cpu);
 
 	caml_enter_blocking_section();
 	numcpus = num_cpu();
-	cpuset = CPU_ALLOC(numcpus);
 	caml_leave_blocking_section();
-	if (cpuset == NULL)
-		uerror("CPU_ALLOC", Nothing);
 
-	sz = CPU_ALLOC_SIZE(numcpus);
-	CPU_ZERO_S(sz, cpuset);
+	CPU_ZERO(&cpuset);
 
-	error = pthread_getaffinity_np(pthread_self(), sz, cpuset);
+	error = pthread_getaffinity_np(pthread_self(), sizeof(cpuset), &cpuset);
 	if (error != 0) {
 		errno = error;	/* Yes, errno is not set */
-		caml_enter_blocking_section();
-		CPU_FREE(cpuset);
-		caml_leave_blocking_section();
 		uerror("pthread_getaffinity_np", Nothing);
 	}
 
+	cpulist = Val_emptylist;
 	for (cpuid = numcpus - 1; cpuid >= 0; cpuid--) {
-		if (!CPU_ISSET_S(cpuid, sz, cpuset))
+		if (!CPU_ISSET(cpuid, &cpuset))
 			continue;
-		cpu = caml_alloc_2(0, Val_int(cpuid), cpulist);
+		cpu = caml_alloc(2, Tag_cons);
+		Store_field(cpu, 0, Val_int(cpuid));
+		Store_field(cpu, 1, cpulist);
 		cpulist = cpu;
 	}
-
-	caml_enter_blocking_section();
-	CPU_FREE(cpuset);
-	caml_leave_blocking_section();
 
 	CAMLreturn (cpulist);
 }
@@ -324,8 +310,12 @@ caml_get_affinity(value unit)
 	numcpus = num_cpu();
 	caml_leave_blocking_section();
 	/* Assume affinity is all, since we can't set or get */
+	cpulist = Val_emptylist;
 	for (cpuid = numcpus - 1; cpuid >= 0; cpuid--) {
-		cpu = caml_alloc_2(0, Val_int(cpuid), cpulist);
+		cpu = caml_alloc(2, Tag_cons);
+		Store_field(cpu, 0, Val_int(cpuid));
+		Store_field(cpu, 1, cpulist);
+
 		cpulist = cpu;
 	}
 
