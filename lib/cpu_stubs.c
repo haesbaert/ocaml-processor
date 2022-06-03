@@ -104,8 +104,21 @@ typedef cpu_set_t cpuset_t;
  */
 #ifdef __DrafonFly__
 
+#include <pthread.h>
+#include <pthread_np.h>
+
+#include <sys/cpumask.h>
+
 #define USE_NUM_CPU_SYSCONF
-#define USE_NOP_AFFINITY
+#define USE_LINUX_AFFINITY
+
+#define CPU_ALLOC(_n)		malloc(CPU_SETSIZE)
+#define	CPU_FREE(cs)		free(cs)
+#define	CPU_ALLOC_SIZE(_c)	CPU_SETSIZE
+#define	CPU_ZERO_S(_s, c)	CPU_ZERO(c)
+#define	CPU_ISSET_S(i, _s, c)	CPU_ISSET(i, c)
+#define	CPU_SET_S(i, _s, c)	CPU_SET(i, c)
+#define	CPU_CLR_S(i, _s, c)	CPU_CLR(i, c)
 
 #endif	/* endif __DragonFly__ */
 
