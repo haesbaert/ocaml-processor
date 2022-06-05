@@ -1,4 +1,4 @@
 (test
- (name cpu)
+ (name test)
  (libraries cpu)
 )

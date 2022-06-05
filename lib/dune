@@ -1,6 +1,7 @@
 (library
  (name cpu)
- (libraries unix)
+ (public_name cpu)
+ (libraries unix str)
  (foreign_stubs
    (language c)
    (names cpu_stubs))

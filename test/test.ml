@@ -14,6 +14,14 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-external num_cpu: unit -> int = "caml_num_cpu"
-external set_affinity: int list -> unit = "caml_set_affinity"
-external get_affinity: unit -> int list = "caml_get_affinity"
+let _ =
+  Printf.printf "We haz %d threads\n%!" (Cpu.Query.num_lcpu ());
+  Printf.printf "Pinning us to 0-1\n%!";
+  Cpu.Affinity.set_ids [0; 1];
+  List.iter (fun cpuid -> Printf.printf "Seen cpu %d\n%!" cpuid) (Cpu.Affinity.get_ids ());
+  let topo = Cpu.Topology_linux.make () in
+  Printf.printf "topology:\n%!";
+  List.iter Cpu.Lcpu.dump topo;
+  Printf.printf "Pinning only to one thread of each core (smt=1):\n%!";
+  Cpu.Affinity.set_lcpus (Cpu.Lcpu.from_smt 1 topo);
+  List.iter Cpu.Lcpu.dump (Cpu.Affinity.get_lcpus ())

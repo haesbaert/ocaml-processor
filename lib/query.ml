@@ -14,12 +14,4 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-let rec hang () =
-  hang ()
-
-let _ =
-  Printf.printf "We haz %d threads\n%!" (Cpu.num_cpu ());
-  Printf.printf "Pinning us to 0-1\n%!";
-  Cpu.set_affinity [0; 1];
-  List.iter (fun cpuid -> Printf.printf "Seen cpu %d\n%!" cpuid) (Cpu.get_affinity ());
-  hang ()
+external num_lcpu: unit -> int = "caml_num_cpu"
