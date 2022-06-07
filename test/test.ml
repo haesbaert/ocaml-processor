@@ -14,14 +14,17 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
+open Cpu
+
 let _ =
-  Printf.printf "We haz %d threads\n%!" (Cpu.Query.num_lcpu ());
+  Printf.printf "We haz %d threads in %d cores within %d sockets\n%!"
+    (Query.num_lcpu ()) (Query.num_core ()) (Query.num_socket ())
   Printf.printf "Pinning us to 0-1\n%!";
-  Cpu.Affinity.set_ids [0; 1];
-  List.iter (fun cpuid -> Printf.printf "Seen cpu %d\n%!" cpuid) (Cpu.Affinity.get_ids ());
-  let topo = Cpu.Topology.make () in
+  Affinity.set_ids [0; 1];
+  List.iter (fun cpuid -> Printf.printf "Seen cpu %d\n%!" cpuid) (Affinity.get_ids ());
+  let topo = Topology.make () in
   Printf.printf "topology:\n%!";
-  List.iter Cpu.Lcpu.dump topo;
+  List.iter Lcpu.dump topo;
   Printf.printf "Pinning only to one thread of each core (smt=1):\n%!";
-  Cpu.Affinity.set_lcpus (Cpu.Lcpu.from_smt 1 topo);
-  List.iter Cpu.Lcpu.dump (Cpu.Affinity.get_lcpus ())
+  Affinity.set_lcpus (Lcpu.from_smt 1 topo);
+  List.iter Lcpu.dump (Affinity.get_lcpus ())

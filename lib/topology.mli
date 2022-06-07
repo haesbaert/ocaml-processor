@@ -14,13 +14,5 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-val num_lcpu : unit -> int
-(** [num_lcpu ()] is the total number of logical cpus, also sometimes referred as cpu threads. *)
-
-val num_core : unit -> int
-(** [num_core ()] is the total number of physical cores, a core might have more than one logical cpu if
-    smt/hyperthreading is available. *)
-
-val num_socket : unit -> int
-(** [num_socket ()] is the total number of physical sockets (processor dies), a socket might have more
-    than one physica l core, which in turn might have more than one logical cpus/threads. *)
+val make : unit -> Lcpu.t list
+(** [make ()] is the list of all logical cpus in the system. *)
