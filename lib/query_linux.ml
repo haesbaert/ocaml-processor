@@ -17,9 +17,9 @@
 external num_lcpu: unit -> int = "caml_num_cpu"
 
 let num_core () =
-  Topology.make () |> Lcpu.from_smt 0 |> List.length
+  Topology.get () |> Lcpu.from_smt 0 |> List.length
 
 let num_socket () =
   succ @@ List.fold_left
     (fun socket lcpu -> if lcpu.Lcpu.socket > socket then lcpu.Lcpu.socket else socket)
-    0 (Topology.make ())
+    0 (Topology.get ())

@@ -14,6 +14,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
+let topology_cache = ref None
+
 let cpu_of_attrs attrs =
   let i a = List.assoc a attrs |> int_of_string in
   let s a = List.assoc a attrs in
@@ -43,3 +45,12 @@ let parse_proc () =
 
 let make () = parse_proc ()
 
+let get () =
+  match !topology_cache with
+  | None ->
+    let topo = make () in
+    topology_cache := Some topo;
+    topo
+  | Some topo -> topo
+
+let reload () = topology_cache := Some (make ())

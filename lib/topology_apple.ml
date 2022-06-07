@@ -25,4 +25,6 @@ let make_fake () =
   in
   loop [] (pred num_lcpu)
 
-let make () = make_fake ()
+let get () = make_fake ()
+
+let reload () = ()
