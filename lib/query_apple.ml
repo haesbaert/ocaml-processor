@@ -15,3 +15,5 @@
  *)
 
 external num_lcpu: unit -> int = "caml_num_cpu"
+external num_core: unit -> int = "caml_num_core"
+external num_socket: unit -> int = "caml_num_socket"

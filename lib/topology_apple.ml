@@ -14,17 +14,15 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-open Cpu
+let make_fake () = 
+  let num_lcpu = Query.num_lcpu () in
+  let rec loop l i =
+    if i = -1 then
+      l
+    else
+      let lcpu = Lcpu.make ~model:"Fake" ~id:i ~smt:0 ~core:i ~socket:0 ~cache_alignment:64 in
+      loop (lcpu :: l) (pred i)
+  in
+  loop [] (pred num_lcpu)
 
-let _ =
-  Printf.printf "We haz %d thread(s) in %d core(s) within %d socket(s)\n%!"
-    (Query.num_lcpu ()) (Query.num_core ()) (Query.num_socket ());
-  Printf.printf "Pinning us to 0-1\n%!";
-  Affinity.set_ids [0; 1];
-  List.iter (fun cpuid -> Printf.printf "Seen cpu %d\n%!" cpuid) (Affinity.get_ids ());
-  let topo = Topology.make () in
-  Printf.printf "topology:\n%!";
-  List.iter Lcpu.dump topo;
-  Printf.printf "Pinning only to one thread of each core (smt=1):\n%!";
-  Affinity.set_lcpus (Lcpu.from_smt 1 topo);
-  List.iter Lcpu.dump (Affinity.get_lcpus ())
+let make () = make_fake ()

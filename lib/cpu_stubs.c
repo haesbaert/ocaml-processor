@@ -39,7 +39,7 @@ int	num_cpu_online(void);
 #include <sched.h>
 
 #define USE_NUM_CPU_SYSCONF
-#define USE_LINUX_AFFINITY
+#define USE_AFFINITY_LINUX
 
 #undef _GNU_SOURCE
 #endif	/* __linux__ */
@@ -49,8 +49,13 @@ int	num_cpu_online(void);
  */
 #ifdef __APPLE__
 
+#include <sys/types.h>
+#include <sys/sysctl.h>
+
 #define USE_NUM_CPU_SYSCONF
 #define USE_NOP_AFFINITY
+#define USE_NUM_CORE_APPLE
+#define USE_NUM_SOCKET_APPLE
 
 #endif	/* endif __APPLE__ */
 
@@ -68,7 +73,7 @@ int	num_cpu_online(void);
 typedef cpuset_t cpu_set_t;
 
 #define USE_NUM_CPU_SYSCONF
-#define USE_LINUX_AFFINITY	/* Nice enough to have compat */
+#define USE_AFFINITY_LINUX	/* Nice enough to have compat */
 
 #endif	/* endif __FreeBSD__ */
 
@@ -92,7 +97,7 @@ typedef cpuset_t cpu_set_t;
 #include <sched.h>
 
 #define USE_NUM_CPU_SYSCONF
-#define USE_LINUX_AFFINITY
+#define USE_AFFINITY_LINUX
 
 /* Mini compat layer for linux affinity */
 typedef cpu_set_t cpuset_t;
@@ -117,7 +122,7 @@ typedef cpu_set_t cpuset_t;
 #include <sys/cpumask.h>
 
 #define USE_NUM_CPU_SYSCONF
-#define USE_LINUX_AFFINITY
+#define USE_AFFINITY_LINUX
 
 #define CPU_ALLOC(_n)		malloc(CPU_SETSIZE)
 #define	CPU_FREE(cs)		free(cs)
@@ -193,6 +198,38 @@ num_cpu_bsd(int hw)
 #error Dont know which num_cpu to use :-(
 #endif	/* USE_NUM_CPU_* */
 
+#ifdef USE_NUM_CORE_APPLE
+
+int
+num_core(void)
+{
+	int32_t core;
+	size_t len = sizeof(core);
+
+	if (sysctlbyname("hw.physicalcpu", &core, &len, NULL, 0) == -1)
+		return (-1);
+
+	return ((int)core);
+}
+
+#endif
+
+#ifdef USE_NUM_SOCKET_APPLE
+
+int
+num_socket(void)
+{
+	int32_t socket;
+	size_t len = sizeof(socket);
+
+	if (sysctlbyname("hw.packages", &socket, &len, NULL, 0) == -1)
+		return (-1);
+
+	return ((int)socket);
+}
+
+#endif
+
 /*
  * Ocaml FFI
  */
@@ -222,10 +259,42 @@ caml_num_cpu_online(value vunit)
 	CAMLreturn (Val_int(n));
 }
 
+#ifdef USE_NUM_CORE_APPLE
+
+CAMLprim value
+caml_num_core(value vunit)
+{
+	CAMLparam0();
+	int n;
+
+	if ((n = num_core()) == -1)
+		uerror("num_core", Nothing);
+
+	CAMLreturn (Val_int(n));
+}
+
+#endif
+
+#ifdef USE_NUM_SOCKET_APPLE
+
+CAMLprim value
+caml_num_socket(value vunit)
+{
+	CAMLparam0();
+	int n;
+
+	if ((n = num_socket()) == -1)
+		uerror("num_socket", Nothing);
+
+	CAMLreturn (Val_int(n));
+}
+
+#endif
+
 /*
  *    set_affinity() and get_affinity()
  */
-#if defined(USE_LINUX_AFFINITY)
+#if defined(USE_AFFINITY_LINUX)
 
 CAMLprim value
 caml_set_affinity(value cpulist)
