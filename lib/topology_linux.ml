@@ -17,7 +17,7 @@
 let cpu_of_attrs attrs =
   let i a = List.assoc a attrs |> int_of_string in
   let s a = List.assoc a attrs in
-  let smt = ((i "apicid") land 1) in
+  let smt = try ((i "apicid") land 1) with Not_found -> 0 in
   Lcpu.make
     ~model:(s "model name")
     ~id:(i "processor")
