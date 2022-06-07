@@ -1,4 +1,4 @@
 (executable
- (public_name cpu)
+ (public_name ocaml-cpu)
  (name main)
  (libraries cpu))
