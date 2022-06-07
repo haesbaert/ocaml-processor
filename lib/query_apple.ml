@@ -14,6 +14,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
+external sysctlbyname32: string -> int32 = "caml_sysctlbyname32"
 external num_lcpu: unit -> int = "caml_num_cpu"
-external num_core: unit -> int = "caml_num_core"
-external num_socket: unit -> int = "caml_num_socket"
+
+let num_core () = sysctlbyname32 "hw.physicalcpu" |> Int32.to_int
+let num_socket () = sysctlbyname32 "hw.packages" |> Int32.to_int

@@ -54,6 +54,7 @@ int	num_cpu_online(void);
 
 #define USE_NUM_CPU_SYSCONF
 #define USE_NOP_AFFINITY
+#define USE_SYSCTLBYNAME_32
 #define USE_NUM_CORE_APPLE
 #define USE_NUM_SOCKET_APPLE
 
@@ -259,9 +260,26 @@ caml_num_cpu_online(value vunit)
 	CAMLreturn (Val_int(n));
 }
 
-#ifdef USE_NUM_CORE_APPLE
+#ifdef USE_SYSCTLBYNAME_32
 
 CAMLprim value
+caml_sysctlbyname32(value mib)
+{
+	CAMLparam1(mib);
+	int32_t word;
+	size_t len = sizeof(word);
+
+	if (sysctlbyname(String_val(mib), &word, &len, NULL, 0) == -1)
+		uerror("sysctlbyname", Nothing);
+
+	CAMLreturn (caml_copy_int32(word));
+}
+
+#endif
+
+#ifdef USE_NUM_CORE_APPLE
+
+CAMLprim value /* NOTE remove if we don't use it from C */
 caml_num_core(value vunit)
 {
 	CAMLparam0();
@@ -277,7 +295,7 @@ caml_num_core(value vunit)
 
 #ifdef USE_NUM_SOCKET_APPLE
 
-CAMLprim value
+CAMLprim value /* NOTE remove if we don't use it from C */
 caml_num_socket(value vunit)
 {
 	CAMLparam0();
