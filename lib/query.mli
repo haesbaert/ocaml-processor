@@ -14,14 +14,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-let _ =
-  Printf.printf "We haz %d threads\n%!" (Cpu.Query.num_lcpu ());
-  Printf.printf "Pinning us to 0-1\n%!";
-  Cpu.Affinity.set_ids [0; 1];
-  List.iter (fun cpuid -> Printf.printf "Seen cpu %d\n%!" cpuid) (Cpu.Affinity.get_ids ());
-  let topo = Cpu.Topology.make () in
-  Printf.printf "topology:\n%!";
-  List.iter Cpu.Lcpu.dump topo;
-  Printf.printf "Pinning only to one thread of each core (smt=1):\n%!";
-  Cpu.Affinity.set_lcpus (Cpu.Lcpu.from_smt 1 topo);
-  List.iter Cpu.Lcpu.dump (Cpu.Affinity.get_lcpus ())
+val num_lcpu : unit -> int
+(** [num_lcpu ()] is the total number of logical cpus, also sometimes referred as cpu threads *)
+
+val num_core : unit -> int
+(** [num_core ()] is the total number of physical cores, a core might have more than one logical cpu if
+    smt/hyperthreading is available *)
