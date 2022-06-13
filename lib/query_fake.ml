@@ -14,17 +14,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-let make_fake () = 
-  let num_lcpu = Query.num_lcpu () in
-  let rec loop l i =
-    if i = -1 then
-      l
-    else
-      let lcpu = Lcpu.make ~id:i ~smt:0 ~core:i ~socket:0 in
-      loop (lcpu :: l) (pred i)
-  in
-  loop [] (pred num_lcpu)
+external num_lcpu: unit -> int = "caml_num_cpu"
 
-let get () = make_fake ()
+let num_core () = num_lcpu ()
 
-let reload () = ()
+let num_socket () = 0

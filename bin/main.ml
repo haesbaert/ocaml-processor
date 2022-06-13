@@ -25,6 +25,6 @@ let _ =
   let topo = Topology.get () in
   Printf.printf "topology:\n%!";
   List.iter Lcpu.dump topo;
-  Printf.printf "Pinning only to one thread of each core (smt=1):\n%!";
-  Affinity.set_lcpus (Lcpu.from_smt 1 topo);
+  Printf.printf "Pinning only to one thread of each core (smt=0):\n%!";
+  Affinity.set_lcpus (Lcpu.from_smt 0 topo);
   List.iter Lcpu.dump (Affinity.get_lcpus ())
