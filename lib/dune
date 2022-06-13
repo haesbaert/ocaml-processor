@@ -29,7 +29,9 @@
 
 (rule
  (target topology.ml)
- (enabled_if (= %{system} "macosx"))
+ (enabled_if (or (= %{system} "macosx")
+                 (= %{system} "freebsd")
+                 (= %{system} "netbsd")
+                 (= %{system} "openbsd")))
  (action
-   (copy topology_apple.ml topology.ml)))
-
+   (copy topology_fake.ml topology.ml)))

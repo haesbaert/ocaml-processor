@@ -15,12 +15,10 @@
  *)
 
 type t = {
-  model   : string;
   id      : int;
   smt     : int;
   core    : int;
   socket  : int;
-  cache_alignment : int;
 }
 
 let id t = t.id
@@ -30,9 +28,9 @@ let from_core core l = List.filter (fun lcpu -> lcpu.core = core) l
 let from_socket socket l = List.filter (fun lcpu -> lcpu.socket = socket) l
 
 let dump t =
-  Printf.printf "id=%d smt=%d core=%d socket=%d ca=%d model=%s\n%!"
-    t.id t.smt t.core t.socket t.cache_alignment t.model
+  Printf.printf "id=%d smt=%d core=%d socket=%d\n%!"
+    t.id t.smt t.core t.socket
 
-let make ~model ~id ~smt ~core ~socket ~cache_alignment =
-  { model; id; smt; core; socket; cache_alignment }
+let make ~id ~smt ~core ~socket =
+  { id; smt; core; socket }
 

@@ -18,15 +18,15 @@ let topology_cache = ref None
 
 let cpu_of_attrs attrs =
   let i a = List.assoc a attrs |> int_of_string in
-  let s a = List.assoc a attrs in
+  (* let s a = List.assoc a attrs in *)
   let smt = try ((i "apicid") land 1) with Not_found -> 0 in
   Lcpu.make
-    ~model:(s "model name")
+    (* ~model:(s "model name") *)
     ~id:(i "processor")
     ~smt
     ~core:(i "core id")
     ~socket:(i "physical id")
-    ~cache_alignment:(i "cache_alignment")
+    (* ~cache_alignment:(i "cache_alignment") *)
 
 let parse_proc () =
   let proc = open_in "/proc/cpuinfo" in

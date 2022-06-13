@@ -20,11 +20,7 @@ let make_fake () =
     if i = -1 then
       l
     else
-      let lcpu = Lcpu.make ~model:"Fake" ~id:i ~smt:0 ~core:i ~socket:0 ~cache_alignment:64 in
+      let lcpu = Lcpu.make ~id:i ~smt:0 ~core:i ~socket:0 in
       loop (lcpu :: l) (pred i)
   in
   loop [] (pred num_lcpu)
-
-let get () = make_fake ()
-
-let reload () = ()
