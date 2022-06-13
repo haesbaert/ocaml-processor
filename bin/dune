@@ -1,4 +1,12 @@
 (executable
  (public_name ocaml-cpu)
  (name main)
+ (modules main)
  (libraries cpu))
+
+(executable
+ (public_name ocaml-amd64)
+ (enabled_if (= %{architecture} "amd64"))
+ (name amd64)
+ (modules amd64)
+ (libraries amd64))
