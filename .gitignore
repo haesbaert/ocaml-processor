@@ -3,3 +3,6 @@
 _build
 *.install
 .merlin
+cscope.out
+cscope.files
+sync.h
