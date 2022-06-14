@@ -25,8 +25,8 @@
 (rule
  (target query.ml)
  (enabled_if (or (= %{system} "freebsd")
-                 (= %{system} "netbsd")
-                 (= %{system} "openbsd")))
+              (= %{system} "netbsd")
+              (= %{system} "openbsd")))
  (action (copy query_fake.ml query.ml)))
 
 (rule
@@ -40,6 +40,6 @@
 (rule
  (target topology.ml)
  (enabled_if (or (= %{system} "freebsd")
-                 (= %{system} "netbsd")
-                 (= %{system} "openbsd")))
+              (= %{system} "netbsd")
+              (= %{system} "openbsd")))
  (action (copy topology_fake.ml topology.ml)))
