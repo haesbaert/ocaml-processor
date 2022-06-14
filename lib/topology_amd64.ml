@@ -19,6 +19,15 @@ external set_ids: int list -> unit = "caml_set_affinity"
 
 let t =
   (* check where we can run *)
+  let vendor_bytes = Bytes.create 12 in
+  let _, ebx, ecx, edx = Amd64.cpuid 0 in
+  let ebx_bytes = Amd64.bytes_of_register ebx in
+  let ecx_bytes = Amd64.bytes_of_register ecx in
+  let edx_bytes = Amd64.bytes_of_register edx in
+  Bytes.blit ebx_bytes 0 vendor_bytes 0 4;
+  Bytes.blit ecx_bytes 0 vendor_bytes 4 4;
+  Bytes.blit edx_bytes 0 vendor_bytes 8 4;
+  let vendor = Bytes.to_string vendor_bytes in
   let oldset = get_ids () in
   let topology = List.map
       (fun (id) ->
@@ -27,16 +36,20 @@ let t =
          let apicid = Int.shift_right ebx 24 in (* read this cpu apicid *)
          let smt, core, socket = Amd64.decompose_apic apicid in
          let _, _, _, edx = Amd64.cpuid 7 in
-         let hybrid = (edx land (Int.shift_left 1 15)) <> 0 in
          let kind =
-           if not hybrid then
+           if vendor = "GenuineIntel" then (* only intel has hybrids *)
+             let () = Printf.printf "XXXXXX\n%!" in
+             let hybrid = (edx land (Int.shift_left 1 15)) <> 0 in
+             if not hybrid then
+               Lcpu.Performance
+             else
+               let eax, _, _, _ = Amd64.cpuid 0x1A in
+               match (Int.shift_right_logical eax 24) with
+               | 0x20 -> Lcpu.Power_efficiency
+               | 0x40 -> Lcpu.Performance
+               | _    -> Lcpu.Performance (* best guess *)
+           else                           (* AMD *)
              Lcpu.Performance
-           else
-             let eax, _, _, _ = Amd64.cpuid 0x1A in
-             match (Int.shift_right_logical eax 24) with
-             | 0x20 -> Lcpu.Power_efficiency
-             | 0x40 -> Lcpu.Performance
-             | _    -> Lcpu.Performance (* best guess *)
          in
          Lcpu.make ~id ~kind ~smt ~core ~socket)
       oldset
