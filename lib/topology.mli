@@ -14,8 +14,5 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-val get : unit -> Lcpu.t list
-(** [get ()] is the list of all logical cpus in the system. *)
-
-val reload : unit -> unit
-(** [reload ()] rebuilds internal cached topology retrievied via [get]. *)
+val t : Lcpu.t list
+(** [t] is the list of all logical cpus in the system. *)

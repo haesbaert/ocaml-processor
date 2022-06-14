@@ -19,7 +19,7 @@ external set_ids: int list -> unit = "caml_set_affinity"
 
 let get_lcpus () : Lcpu.t list =
   let id_list = get_ids () in
-  List.filter (fun lcpu -> List.mem (Lcpu.id lcpu) id_list) (Topology.get ())
+  List.filter (fun lcpu -> List.mem (Lcpu.id lcpu) id_list) Topology.t
 
 let set_lcpus (cpu_list : Lcpu.t list) : unit =
   set_ids (List.map (fun lcpu -> Lcpu.id lcpu) cpu_list)

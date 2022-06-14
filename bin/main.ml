@@ -22,7 +22,7 @@ let _ =
   Printf.printf "Pinning us to 0-1\n%!";
   Affinity.set_ids [0; 1];
   List.iter (fun cpuid -> Printf.printf "Seen cpu %d\n%!" cpuid) (Affinity.get_ids ());
-  let topo = Topology.get () in
+  let topo = Topology.t in
   Printf.printf "topology:\n%!";
   List.iter Lcpu.dump topo;
   Printf.printf "Pinning only to one thread of each core (smt=0):\n%!";

@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-let make_fake () = 
+let t =
   let num_lcpu = Query.num_lcpu () in
   let rec loop l i =
     if i = -1 then
@@ -24,7 +24,3 @@ let make_fake () =
       loop (lcpu :: l) (pred i)
   in
   loop [] (pred num_lcpu)
-
-let get () = make_fake ()
-
-let reload () = ()

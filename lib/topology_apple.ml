@@ -14,11 +14,10 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-let get () =
+let t =
   let id = ref (-1) in
   List.map (fun (smt, core, socket) ->
       id := succ !id;
       Lcpu.make ~id:!id ~kind:Lcpu.Performance ~smt ~core ~socket)
     (Ioreg.fetch ())
 
-let reload () = ()
