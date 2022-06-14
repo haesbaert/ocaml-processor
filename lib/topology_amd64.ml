@@ -23,10 +23,22 @@ let t =
   let topology = List.map
       (fun (id) ->
          set_ids [id];          (* pin ourselves to one cpu *)
-         let _, ebx, _, _ = Amd64.cpuid_leaf 1 0 in
+         let _, ebx, _, _ = Amd64.cpuid 1 in
          let apicid = Int.shift_right ebx 24 in (* read this cpu apicid *)
          let smt, core, socket = Amd64.decompose_apic apicid in
-         Lcpu.make ~id ~kind:Lcpu.Performance ~smt ~core ~socket)
+         let _, _, _, edx = Amd64.cpuid 7 in
+         let hybrid = (edx land (Int.shift_left 1 15)) <> 0 in
+         let kind =
+           if not hybrid then
+             Lcpu.Performance
+           else
+             let eax, _, _, _ = Amd64.cpuid 0x1A in
+             match (Int.shift_right_logical eax 24) with
+             | 0x20 -> Lcpu.Power_efficiency
+             | 0x40 -> Lcpu.Performance
+             | _    -> Lcpu.Performance (* best guess *)
+         in
+         Lcpu.make ~id ~kind ~smt ~core ~socket)
       oldset
   in
   set_ids oldset;               (* restore old set so we can run anywhere *)
