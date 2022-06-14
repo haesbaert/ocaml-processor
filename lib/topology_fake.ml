@@ -14,8 +14,10 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
+external num_lcpu: unit -> int = "caml_num_cpu"
+
 let t =
-  let num_lcpu = Query.num_lcpu () in
+  let num_lcpu = num_lcpu () in
   let rec loop l i =
     if i = -1 then
       l

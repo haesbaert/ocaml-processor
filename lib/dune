@@ -37,7 +37,8 @@
 
 (rule
  (target topology.ml)
- (enabled_if (and (= %{system} "linux") (= %{architecture} "amd64")))
+ (enabled_if (and (= %{architecture} "amd64")
+              (or (= %{system} "linux") (= %{system} "freebsd"))))
  (action (copy topology_amd64.ml topology.ml)))
 (rule
  (target topology.ml)
@@ -49,7 +50,7 @@
  (action (copy topology_apple.ml topology.ml)))
 (rule
  (target topology.ml)
- (enabled_if (or (= %{system} "freebsd")
+ (enabled_if (or
               (= %{system} "netbsd")
               (= %{system} "openbsd")))
  (action (copy topology_fake.ml topology.ml)))
