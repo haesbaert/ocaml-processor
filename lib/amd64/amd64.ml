@@ -15,7 +15,8 @@
  *)
 
 (* This code is only compiled on amd64, where int is 63bits *)
-external cpuid_leaf: int -> int -> (int * int * int * int) = "caml_cpuid_leaf"
+external cpuid_leaf : int -> int -> (int * int * int * int) = "caml_cpuid_leaf"
+external decompose_apic : int -> (int * int * int) = "caml_decompose_apic"
 
 let cpuid code = cpuid_leaf code 0
 
@@ -26,3 +27,4 @@ let bytes_of_register x =
   Bytes.set bytes 2 (Int.shift_right (x land 0xff0000)   16 |> Char.chr);
   Bytes.set bytes 3 (Int.shift_right (x land 0xff000000) 24 |> Char.chr);
   bytes
+

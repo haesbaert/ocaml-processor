@@ -14,19 +14,11 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-val cpuid_leaf : int -> int -> (int * int * int * int)
-(** [cpuid_leaf code leaf] is the CPUID instruction with input
-    [code](eax) and leaf(ecx), return is the tuple
-    (eax * ebx * ecx * edx) *)
+let get () =
+  let id = ref (-1) in
+  List.map (fun (smt, core, socket) ->
+      id := succ !id;
+      Lcpu.make ~id:!id ~smt ~core ~socket)
+    (Ioreg.fetch ())
 
-val cpuid : int -> (int * int * int * int)
-(** [cpuid code] is [cpuid_leaf code 0] *)
-
-val bytes_of_register : int -> bytes
-(** [bytes_of_register register] is the 4 byte representation of
-    [register] in bytes *)
-
-val decompose_apic : int -> (int * int * int)
-(** [decompose_apic apicid] is the [smt * core * package] id of
-    [apicid]. Can throw [invalid_argument] if cpu_vendor is unknown or
-    [apicid] is invalid *)
+let reload () = ()

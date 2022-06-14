@@ -5,4 +5,4 @@ _build
 .merlin
 cscope.out
 cscope.files
-sync.h
+sync.sh

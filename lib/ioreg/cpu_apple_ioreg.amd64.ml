@@ -14,19 +14,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-val cpuid_leaf : int -> int -> (int * int * int * int)
-(** [cpuid_leaf code leaf] is the CPUID instruction with input
-    [code](eax) and leaf(ecx), return is the tuple
-    (eax * ebx * ecx * edx) *)
+external fetch_ : unit -> (int * int) list = "caml_ioreg_fetch" (* index * apicid *)
 
-val cpuid : int -> (int * int * int * int)
-(** [cpuid code] is [cpuid_leaf code 0] *)
-
-val bytes_of_register : int -> bytes
-(** [bytes_of_register register] is the 4 byte representation of
-    [register] in bytes *)
-
-val decompose_apic : int -> (int * int * int)
-(** [decompose_apic apicid] is the [smt * core * package] id of
-    [apicid]. Can throw [invalid_argument] if cpu_vendor is unknown or
-    [apicid] is invalid *)
+let fetch () =
+  List.map (fun (_, apic) ->
+      Amd64.decompose_apic apic)
+    (fetch_ ())
