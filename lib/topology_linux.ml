@@ -23,6 +23,7 @@ let cpu_of_attrs attrs =
   Lcpu.make
     (* ~model:(s "model name") *)
     ~id:(i "processor")
+    ~kind:Lcpu.Performance
     ~smt
     ~core:(i "core id")
     ~socket:(i "physical id")
