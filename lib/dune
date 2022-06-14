@@ -4,7 +4,10 @@
  (libraries unix str
   (select ioreg.ml from
    (cpu_apple_ioreg -> ioreg.default.ml)
-   (                -> ioreg.nop.ml)))
+   (                -> ioreg.nop.ml))
+  (select amd64.ml from
+   (amd64           -> amd64.default.ml)
+   (                -> amd64.nop.ml)))
  (modules lcpu query affinity topology ioreg)
  (private_modules ioreg)
  (foreign_stubs (language c) (names cpu_stubs))
@@ -13,6 +16,9 @@
 (rule
  (target ioreg.nop.ml)
  (action (bash "touch ioreg.nop.ml")))
+(rule
+ (target amd64.nop.ml)
+ (action (bash "touch amd64.nop.ml")))
 
 (rule
  (target query.ml)
@@ -31,7 +37,11 @@
 
 (rule
  (target topology.ml)
- (enabled_if (= %{system} "linux"))
+ (enabled_if (and (= %{system} "linux") (= %{architecture} "amd64")))
+ (action (copy topology_amd64.ml topology.ml)))
+(rule
+ (target topology.ml)
+ (enabled_if (and (= %{system} "linux") (not (= %{architecture} "amd64"))))
  (action (copy topology_linux.ml topology.ml)))
 (rule
  (target topology.ml)
