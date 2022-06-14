@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-type kind = Performance | Power_efficiency
+type kind = P_core | E_core
 
 type t = {
   id      : int;
@@ -32,7 +32,7 @@ let from_socket socket l = List.filter (fun lcpu -> lcpu.socket = socket) l
 
 let dump t =
   let s = match t.kind with
-      Performance -> "Performance" | Power_efficiency -> "Power_efficiency" in
+      P_core -> "P_core" | E_core -> "E_core" in
   Printf.printf "id=%d smt=%d core=%d socket=%d kind=%s\n%!"
     t.id t.smt t.core t.socket s
 

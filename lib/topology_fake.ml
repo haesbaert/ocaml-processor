@@ -22,7 +22,7 @@ let t =
     if i = -1 then
       l
     else
-      let lcpu = Lcpu.(make ~id:i ~kind:Performance ~smt:0 ~core:i ~socket:0) in
+      let lcpu = Lcpu.(make ~id:i ~kind:P_core ~smt:0 ~core:i ~socket:0) in
       loop (lcpu :: l) (pred i)
   in
   loop [] (pred num_lcpu)

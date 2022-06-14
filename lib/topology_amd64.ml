@@ -41,15 +41,15 @@ let t =
              let () = Printf.printf "XXXXXX\n%!" in
              let hybrid = (edx land (Int.shift_left 1 15)) <> 0 in
              if not hybrid then
-               Lcpu.Performance
+               Lcpu.P_core
              else
                let eax, _, _, _ = Amd64.cpuid 0x1A in
                match (Int.shift_right_logical eax 24) with
-               | 0x20 -> Lcpu.Power_efficiency
-               | 0x40 -> Lcpu.Performance
-               | _    -> Lcpu.Performance (* best guess *)
+               | 0x20 -> Lcpu.E_core
+               | 0x40 -> Lcpu.P_core
+               | _    -> Lcpu.P_core (* best guess *)
            else                           (* AMD *)
-             Lcpu.Performance
+             Lcpu.P_core
          in
          Lcpu.make ~id ~kind ~smt ~core ~socket)
       oldset
