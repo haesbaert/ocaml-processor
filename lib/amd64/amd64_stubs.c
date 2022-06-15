@@ -46,8 +46,8 @@ caml_cpuid_leaf(value code, value leaf)
 	ret = caml_alloc(4, 0);
 	Store_field(ret, 0, Val_long(eax));
 	Store_field(ret, 1, Val_long(ebx));
-	Store_field(ret, 2, Val_long(edx));
-	Store_field(ret, 3, Val_long(ecx));
+	Store_field(ret, 2, Val_long(ecx));
+	Store_field(ret, 3, Val_long(edx));
 
 	CAMLreturn(ret);
 }
