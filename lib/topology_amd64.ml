@@ -38,13 +38,11 @@ let t =
          let _, _, _, edx = Amd64.cpuid 7 in
          let kind =
            if vendor = "GenuineIntel" then (* only intel has hybrids *)
-             let () = Printf.printf "cpuid 7 edx = 0x%x\n%!" edx in
              let hybrid = (edx land (Int.shift_left 1 15)) <> 0 in
              if not hybrid then
                Lcpu.P_core
              else
                let eax, _, _, _ = Amd64.cpuid 0x1A in
-               let () = Printf.printf "cpuid 0x1A eax = 0x%x\n%!" eax in
                match (Int.shift_right_logical eax 24) with
                | 0x20 -> Lcpu.E_core
                | 0x40 -> Lcpu.P_core
