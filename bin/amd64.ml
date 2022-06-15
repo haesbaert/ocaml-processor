@@ -21,8 +21,8 @@ let _ =
   let ecx_bytes = Amd64.bytes_of_register ecx in
   let edx_bytes = Amd64.bytes_of_register edx in
   Bytes.blit ebx_bytes 0 vendor 0 4;
-  Bytes.blit ecx_bytes 0 vendor 4 4;
-  Bytes.blit edx_bytes 0 vendor 8 4;
+  Bytes.blit edx_bytes 0 vendor 4 4;
+  Bytes.blit ecx_bytes 0 vendor 8 4;
 
   Printf.printf "ebx=0x%x ecx=0x%x ecx=0x%x\nvendor=%s\n%!"
     ebx ecx edx

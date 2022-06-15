@@ -25,8 +25,8 @@ let t =
   let ecx_bytes = Amd64.bytes_of_register ecx in
   let edx_bytes = Amd64.bytes_of_register edx in
   Bytes.blit ebx_bytes 0 vendor_bytes 0 4;
-  Bytes.blit ecx_bytes 0 vendor_bytes 4 4;
-  Bytes.blit edx_bytes 0 vendor_bytes 8 4;
+  Bytes.blit edx_bytes 0 vendor_bytes 4 4;
+  Bytes.blit ecx_bytes 0 vendor_bytes 8 4;
   let vendor = Bytes.to_string vendor_bytes in
   let oldset = get_ids () in
   let topology = List.map
