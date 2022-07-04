@@ -51,10 +51,11 @@ debug(const char *fmt, ...)
 #define IOREG_MAXCPU 128
 
 struct index_map {
-	int		index;
+	uint32_t	index;
 	uint32_t	apicid;
 };
 
+#if defined(__amd64__)
 int
 ioreg_to_index_map(struct index_map *map, int *nmap)
 {
@@ -134,6 +135,114 @@ ioreg_to_index_map(struct index_map *map, int *nmap)
 
 	return (0);
 }
+#elif defined(__arm64__)
+int
+ioreg_to_index_map(struct index_map *map, int *nmap)
+{
+	io_registry_entry_t	cpus_root;
+	io_iterator_t		cpus_iter;
+	io_registry_entry_t	cpus_child;
+	kern_return_t		kret;
+	int			i = 0, nfound = 0;
+
+	cpus_root = IORegistryEntryFromPath(kIOMainPortDefault,
+	    DT_PLANE ":/cpus");
+	if (cpus_root == 0) {
+		debug("IORegistryEntryFromPath");
+		return (-1);
+	}
+
+	kret = IORegistryEntryGetChildIterator(cpus_root, DT_PLANE, &cpus_iter);
+	if (kret != KERN_SUCCESS) {
+		IOObjectRelease(cpus_root);
+		debug("IORegistryEntryGetChildIterator");
+		return (-1);
+	}
+
+	while ((cpus_child = IOIteratorNext(cpus_iter)) != 0) {
+		CFTypeRef ref;
+		int cpuid, cputype;
+		long long lld;
+		uint8_t bytes[2];
+
+		if (nfound == *nmap)
+			break;
+
+		/* Fetch logical-cpu-id, ok to fail */
+		ref = IORegistryEntrySearchCFProperty(cpus_child, DT_PLANE,
+		    CFSTR("logical-cpu-id"), kCFAllocatorDefault, kNilOptions);
+		if (!ref) {
+			debug("IORegistryEntrySearchCFProperty"
+			    "CFSTR(\"logical-cpu-id\") i=%d (this is ok!)", i);
+			continue;
+		}
+		if (CFGetTypeID(ref) != CFNumberGetTypeID()) {
+			debug("unexpected logical-cpu-id type");
+			CFRelease(ref);
+			continue;
+		}
+		if (!CFNumberGetValue(ref, kCFNumberLongLongType, &lld_value)) {
+			debug("CFNumberGetValue");
+			CFRelease(ref);
+			continue;
+		}
+		cpuid = (int)lld_value;
+		CFRelease(ref);
+
+		/* Peek into cluster-type to figure if E-core or P-core */
+		ref = IORegistryEntrySearchCFProperty(cpus_child,
+		    DT_PLANE, CFSTR("cluster-type"), kCFAllocatorDefault,
+		    kNilOptions);
+		if (!ref) {
+			debug("IORegistryEntrySearchCFProperty"
+			    "CFSTR(\"cluster-type\") i=%d (this is ok!)", i);
+			continue;
+		}
+		if (CFGetTypeID(ref) != CFDataGetTypeID()) {
+			debug("unexpected cluster-type type");
+			CFRelease(ref);
+			continue;
+		}
+		if (CFDataGetLength(ref) < 2) {
+			debug("cluster-type too short");
+			CFRelease(ref);
+			continue;
+		}
+		/* NOTE no error */
+		CFDataGetBytes(ref, CFRangeMake(0, 2), bytes);
+		if (bytes[1] != 0) {
+			debug("unterminated cluster-type");
+			CFRelease(ref);
+		}
+		if (bytes[0] == 'P')
+			cputype = 0;
+		else if (bytes[0] == 'E')
+			cputype = 1;
+		else {
+			debug("unknown cluster-type[0] %c", (char)bytes[0]);
+			CFRelease(ref);
+			continue;
+		}
+		CFRelease(ref);
+		debug("%2d found entry: cpuid=%2d cputype=%2d\n", i++, cpuid,
+		    cputype);
+
+		map->index = cpuid;
+		map->apicid = cputype;
+		map++;
+		nfound++;
+	}
+	IOObjectRelease(cpus_iter);
+	IOObjectRelease(cpus_root);
+
+	/* Tell how many we filled */
+	*nmap = nfound;
+
+	return (0);
+}
+#else
+#error "no __amd64__ or __arm64__"
+#endif
 
 CAMLprim value
 caml_ioreg_fetch(void)

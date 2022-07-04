@@ -16,9 +16,9 @@
 
 let t =
   let id = ref (-1) in
-  List.map (fun (core, pcore) ->
+  List.map (fun (core, ecore) ->
       id := succ !id;
-      let kind = if pcore = 0 then Lcpu.P_core else Lcpu.E_core in
+      let kind = if ecore = 1 then Lcpu.E_core else Lcpu.P_core in
       Lcpu.make ~id:!id ~kind ~smt:0 ~core ~socket:0)
     (Cpu_apple_ioreg.fetch ())
 
