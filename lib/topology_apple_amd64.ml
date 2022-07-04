@@ -14,9 +14,14 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-external fetch_ : unit -> (int * int) list = "caml_ioreg_fetch" (* index * apicid *)
+let t =
+  let l = List.map
+      (fun (_, apic) -> Amd64.decompose_apic apic)
+      (Cpu_apple_ioreg.fetch ())
+  in
+  let id = ref (-1) in
+  List.map (fun (smt, core, socket) ->
+      id := succ !id;
+      Lcpu.make ~id:!id ~kind:Lcpu.P_core ~smt ~core ~socket)
+    l
 
-let fetch () =
-  List.map (fun (_, apic) ->
-      Amd64.decompose_apic apic)
-    (fetch_ ())
