@@ -99,6 +99,7 @@ ioreg_to_index_map(struct index_map *map, int *nmap)
 		}
 		if (!CFNumberGetValue(ref, kCFNumberIntType, &apicid)) {
 			debug("CFNumberGetValue");
+			CFRelease(ref);
 			continue;
 		}
 		CFRelease(ref);
@@ -113,6 +114,7 @@ ioreg_to_index_map(struct index_map *map, int *nmap)
 		}
 		if (!CFNumberGetValue(ref, kCFNumberIntType, &index)) {
 			debug("CFNumberGetValue");
+			CFRelease(ref);
 			continue;
 		}
 		CFRelease(ref);
@@ -124,7 +126,6 @@ ioreg_to_index_map(struct index_map *map, int *nmap)
 		map++;
 		nfound++;
 	}
-	/* TODO make sure there isn't anything else missing  */
 	IOObjectRelease(cpus_iter);
 	IOObjectRelease(cpus_root);
 
