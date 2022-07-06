@@ -412,19 +412,3 @@ caml_get_affinity(value unit)
 #else  /* USE_*_AFFINITY */
 #error Dont know which set_affinity to use :(
 #endif	/* USE_*_AFFINITY */
-
-#ifdef USE_AMD64_TOPOLOGY
-
-#include <string.h>		/* for memcpy(3) */
-
-#define	CPUID(code, eax, ebx, ecx, edx)                         \
-	__asm volatile("cpuid"                                  \
-	    : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)    \
-	    : "a" (code))
-#define	CPUID_LEAF(code, leaf, eax, ebx, ecx, edx)		\
-	__asm volatile("cpuid"                                  \
-	    : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)    \
-	    : "a" (code), "c" (leaf))
-
-
-#endif	/* USE_AMD64_TOPOLOGY */
