@@ -86,10 +86,6 @@ ioreg_to_index_map(struct index_map *map, int *nmap)
 		if (nfound == *nmap)
 			break;
 
-		/* ARM64! */
-		/* ref = IORegistryEntrySearchCFProperty(cpus_child, DT_PLANE, */
-		/*     CFSTR("logical-cpu-id"), kCFAllocatorDefault, kNilOptions); */
-
 		/* Fetch processor-lapic (apicid) */
 		ref = IORegistryEntrySearchCFProperty(cpus_child, DT_PLANE,
 		    CFSTR("processor-lapic"), kCFAllocatorDefault, kNilOptions);
@@ -181,12 +177,12 @@ ioreg_to_index_map(struct index_map *map, int *nmap)
 			CFRelease(ref);
 			continue;
 		}
-		if (!CFNumberGetValue(ref, kCFNumberLongLongType, &lld_value)) {
+		if (!CFNumberGetValue(ref, kCFNumberLongLongType, &lld)) {
 			debug("CFNumberGetValue");
 			CFRelease(ref);
 			continue;
 		}
-		cpuid = (int)lld_value;
+		cpuid = (int)lld;
 		CFRelease(ref);
 
 		/* Peek into cluster-type to figure if E-core or P-core */
