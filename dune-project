@@ -19,10 +19,7 @@
  (name cpu)
  (synopsis "CPU Topology & Affinity for ocaml-multicore.")
  (description "Lets you pin Domains to sets of cpus as well as query the system CPU topology.")
- (depends
-   ocaml
-   dune
-   )
+ (depends ocaml dune)
  (tags
   (multicore cpu thread core package socket affinity scheduler domain)))
 
