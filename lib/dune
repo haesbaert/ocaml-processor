@@ -40,10 +40,6 @@
  (action (copy topology_amd64.ml topology.ml)))
 (rule
  (target topology.ml)
- (enabled_if (and (= %{system} "linux") (not (= %{architecture} "amd64"))))
- (action (copy topology_linux.ml topology.ml)))
-(rule
- (target topology.ml)
  (enabled_if (and (= %{system} "macosx") (= %{architecture} "amd64")))
  (action (copy topology_apple_amd64.ml topology.ml)))
 (rule
@@ -54,5 +50,7 @@
  (target topology.ml)
  (enabled_if (or
               (= %{system} "netbsd")
-              (= %{system} "openbsd")))
+              (= %{system} "openbsd")
+              (= %{system} "dragonflybsd")
+              (and (= %{system} "linux") (not (= %{architecture} "amd64")))))
  (action (copy topology_fake.ml topology.ml)))
