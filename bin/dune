@@ -1,8 +1,8 @@
 (executable
- (public_name ocaml-cpu)
+ (public_name ocaml-processor)
  (name main)
  (modules main)
- (libraries cpu))
+ (libraries processor))
 
 (executable
  (public_name ocaml-amd64)

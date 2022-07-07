@@ -1,16 +1,16 @@
 (library
- (name cpu)
- (public_name cpu)
+ (name processor)
+ (public_name processor)
  (libraries unix str
   (select ioreg.ml from
-   (cpu_apple_ioreg -> ioreg.default.ml)
+   (processor_apple_ioreg -> ioreg.default.ml)
    (                -> ioreg.nop.ml))
   (select amd64.ml from
    (amd64           -> amd64.default.ml)
    (                -> amd64.nop.ml)))
- (modules lcpu query affinity topology ioreg cpu)
+ (modules lcpu query affinity topology ioreg processor)
  (private_modules ioreg)
- (foreign_stubs (language c) (names cpu_stubs))
+ (foreign_stubs (language c) (names processor_stubs))
  (c_library_flags (-lpthread)))
 
 (rule

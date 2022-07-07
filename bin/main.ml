@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-open Cpu
+open Processor
 
 let _ =
   Printf.printf "We haz %d thread(s) in %d core(s) within %d socket(s)\n%!"

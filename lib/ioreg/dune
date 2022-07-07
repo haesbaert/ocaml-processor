@@ -1,6 +1,6 @@
 (library
- (name cpu_apple_ioreg)
- (public_name cpu.apple_ioreg)
+ (name processor_apple_ioreg)
+ (public_name processor.apple_ioreg)
  (enabled_if (= %{system} "macosx"))
  (foreign_stubs
   (language c)
