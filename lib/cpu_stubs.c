@@ -111,13 +111,12 @@ caml_set_affinity(value cpulist)
 	CAMLparam1(cpulist);
 	CAMLlocal1(cpu);
 	cpu_set_t cpuset;
-	int error;
-	long cpuid;
+	int error, cpuid;
 
 	CPU_ZERO(&cpuset);
 
 	for (cpu = cpulist; cpu != Val_emptylist; cpu = Field(cpu, 1)) {
-		cpuid = Long_val(Field(cpu, 0));
+		cpuid = Int_val(Field(cpu, 0));
 		CPU_SET(cpuid, &cpuset);
 	}
 
