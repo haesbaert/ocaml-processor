@@ -18,7 +18,7 @@ open Processor
 
 let _ =
   Printf.printf "We haz %d thread(s) in %d core(s) within %d socket(s)\n%!"
-    (Query.num_cpu ()) (Query.num_core ()) (Query.num_socket ());
+    (Query.cpu_count ()) (Query.core_count ()) (Query.socket_count ());
   Printf.printf "Pinning us to 0-1\n%!";
   Affinity.set_ids [0; 1];
   List.iter (fun cpuid -> Printf.printf "Seen cpu %d\n%!" cpuid) (Affinity.get_ids ());

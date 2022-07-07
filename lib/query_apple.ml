@@ -15,7 +15,7 @@
  *)
 
 external sysctlbyname32: string -> int32 = "caml_sysctlbyname32"
-external num_cpu: unit -> int = "caml_num_cpu"
+external cpu_count: unit -> int = "caml_num_cpu"
 
-let num_core () = sysctlbyname32 "hw.physicalcpu" |> Int32.to_int
-let num_socket () = sysctlbyname32 "hw.packages" |> Int32.to_int
+let core_count () = sysctlbyname32 "hw.physicalcpu" |> Int32.to_int
+let socket_count () = sysctlbyname32 "hw.packages" |> Int32.to_int
