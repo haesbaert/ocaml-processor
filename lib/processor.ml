@@ -1,4 +1,4 @@
 module Query = Query
 module Affinity = Affinity
 module Topology = Topology
-module Lcpu = Lcpu
+module Cpu = Cpu

@@ -14,8 +14,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-val num_lcpu : unit -> int
-(** [num_lcpu ()] is the total number of logical cpus, also sometimes referred as cpu threads. *)
+val num_cpu : unit -> int
+(** [num_cpu ()] is the total number of logical cpus, also sometimes referred as cpu threads. *)
 
 val num_core : unit -> int
 (** [num_core ()] is the total number of physical cores, a core might have more than one logical cpu if

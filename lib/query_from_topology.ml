@@ -14,11 +14,11 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-external num_lcpu: unit -> int = "caml_num_cpu"
+external num_cpu: unit -> int = "caml_num_cpu"
 
-let num_core () = Topology.t |> Lcpu.from_smt 0 |> List.length
+let num_core () = Topology.t |> Cpu.from_smt 0 |> List.length
 
 let num_socket () =
   succ @@ List.fold_left
-    (fun socket lcpu -> if lcpu.Lcpu.socket > socket then lcpu.Lcpu.socket else socket)
+    (fun socket cpu -> if cpu.Cpu.socket > socket then cpu.Cpu.socket else socket)
     0 Topology.t

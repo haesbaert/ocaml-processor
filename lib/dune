@@ -8,7 +8,7 @@
   (select amd64.ml from
    (amd64           -> amd64.default.ml)
    (                -> amd64.nop.ml)))
- (modules lcpu query affinity topology ioreg processor)
+ (modules cpu query affinity topology ioreg processor)
  (private_modules ioreg)
  (foreign_stubs (language c) (names processor_stubs))
  (c_library_flags (-lpthread)))

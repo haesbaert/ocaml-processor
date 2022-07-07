@@ -14,15 +14,15 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-external num_lcpu: unit -> int = "caml_num_cpu"
+external num_cpu: unit -> int = "caml_num_cpu"
 
 let t =
-  let num_lcpu = num_lcpu () in
+  let num_cpu = num_cpu () in
   let rec loop l i =
     if i = -1 then
       l
     else
-      let lcpu = Lcpu.(make ~id:i ~kind:P_core ~smt:0 ~core:i ~socket:0) in
-      loop (lcpu :: l) (pred i)
+      let cpu = Cpu.(make ~id:i ~kind:P_core ~smt:0 ~core:i ~socket:0) in
+      loop (cpu :: l) (pred i)
   in
-  loop [] (pred num_lcpu)
+  loop [] (pred num_cpu)

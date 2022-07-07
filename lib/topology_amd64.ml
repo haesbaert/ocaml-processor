@@ -40,17 +40,17 @@ let t =
            if vendor = "GenuineIntel" then (* only intel has hybrids *)
              let hybrid = (edx land (Int.shift_left 1 15)) <> 0 in
              if not hybrid then
-               Lcpu.P_core
+               Cpu.P_core
              else
                let eax, _, _, _ = Amd64.cpuid 0x1A in
                match (Int.shift_right_logical eax 24) with
-               | 0x20 -> Lcpu.E_core
-               | 0x40 -> Lcpu.P_core
-               | _    -> Lcpu.P_core (* best guess *)
+               | 0x20 -> Cpu.E_core
+               | 0x40 -> Cpu.P_core
+               | _    -> Cpu.P_core (* best guess *)
            else                           (* AMD *)
-             Lcpu.P_core
+             Cpu.P_core
          in
-         Lcpu.make ~id ~kind ~smt ~core ~socket)
+         Cpu.make ~id ~kind ~smt ~core ~socket)
       oldset
   in
   set_ids oldset;               (* restore old set so we can run anywhere *)

@@ -26,9 +26,9 @@ type t = {
 
 let id t = t.id
 
-let from_smt smt l = List.filter (fun lcpu -> lcpu.smt = smt) l
-let from_core core l = List.filter (fun lcpu -> lcpu.core = core) l
-let from_socket socket l = List.filter (fun lcpu -> lcpu.socket = socket) l
+let from_smt smt l = List.filter (fun cpu -> cpu.smt = smt) l
+let from_core core l = List.filter (fun cpu -> cpu.core = core) l
+let from_socket socket l = List.filter (fun cpu -> cpu.socket = socket) l
 
 let dump t =
   let s = match t.kind with

@@ -22,6 +22,6 @@ let t =
   let id = ref (-1) in
   List.map (fun (smt, core, socket) ->
       id := succ !id;
-      Lcpu.make ~id:!id ~kind:Lcpu.P_core ~smt ~core ~socket)
+      Cpu.make ~id:!id ~kind:Cpu.P_core ~smt ~core ~socket)
     l
 

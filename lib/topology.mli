@@ -14,5 +14,5 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-val t : Lcpu.t list
+val t : Cpu.t list
 (** [t] is the list of all logical cpus in the system. *)
