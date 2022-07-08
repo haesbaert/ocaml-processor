@@ -66,6 +66,27 @@ utop # Processor.Affinity.get_cpus ();;
  {Processor.Cpu.id = 4; kind = Processor.Cpu.P_core; smt = 1; core = 0; socket = 0}]
 ```
 
+### ocaml-processor-dump
+
+A simple binary called `ocaml-processor-dump` is provided:
+```
+$ ocaml-processor-dump
+cpu_count: 8
+core_count: 4
+socket_count: 1
+cpus-per-core: 2
+cpus-per-socket: 8
+cores-per-socket: 4
+cpu0: smt=0 core=0 socket=0 kind=P_core
+cpu1: smt=0 core=1 socket=0 kind=P_core
+cpu2: smt=0 core=2 socket=0 kind=P_core
+cpu3: smt=0 core=3 socket=0 kind=P_core
+cpu4: smt=1 core=0 socket=0 kind=P_core
+cpu5: smt=1 core=1 socket=0 kind=P_core
+cpu6: smt=1 core=2 socket=0 kind=P_core
+cpu7: smt=1 core=3 socket=0 kind=P_core
+```
+
 ### Implementation Details
 
 Turns out all of this is harder than it should, there are basically no
