@@ -17,7 +17,7 @@
 let t =
   let l = List.map
       (fun (_, apic) -> Amd64.decompose_apic apic)
-      (Cpu_apple_ioreg.fetch ())
+      (Processor_apple_ioreg.fetch ())
   in
   let id = ref (-1) in
   List.map (fun (smt, core, socket) ->

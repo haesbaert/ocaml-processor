@@ -1,1 +1,1 @@
-let fetch = Cpu_apple_ioreg.fetch
+let fetch = Processor_apple_ioreg.fetch
