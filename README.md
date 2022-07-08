@@ -110,10 +110,11 @@ worth it.
 
 #### NetBSD, OpenBSD, DragonflyBSD
 
-On these systems `Query` is accurate for `cpu_count`, `thread_count`
-and `socket_count` will be faked, topology will be faked and affinity
-is a nop.  NetBSD and DragonflyBSD could have affinity support but I
-don't want to maintain it. OpenBSD has no support for it.
+On these systems `Query` is accurate for `cpu_count`, but
+`thread_count` and `socket_count` will be faked, topology will be
+faked and affinity is a nop.  NetBSD and DragonflyBSD could have
+affinity support but I don't want to maintain it. OpenBSD has no
+support for it.
 
 #### Apple/Darwin
 
