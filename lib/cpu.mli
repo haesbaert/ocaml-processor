@@ -16,8 +16,8 @@
 (** Expresses a logical CPU/thread. *)
 
 type kind =
-  | P_core (** Performance cpu, faster, power hungry one *)
-  | E_core (** Energy efficient, slower, global warming aware one *)
+  | P_core  (** Performance cpu, faster, power hungry one *)
+  | E_core  (** Energy efficient, slower, global warming aware one *)
 (** The [kind] of a {!Cpu.t} *)
 
 type t = {
