@@ -104,6 +104,10 @@ On these systems, `Query` and `Topology` will always be accurate.
 
 ### Future Work
 
-Cache topology would be welcome, as well as CPU model/brand, which
-there is some support but I want to make it right before
-publishing. If you want to work on cache topology, you get beers !
+* Windows support, hopefully I work on this when I get a more
+comfortable windows environment to develop.
+* Cache topology would be welcome as well.
+* CPU model/brand, there is some support but I want to make it right before
+publishing.
+
+If you want to work on cache topology, I'll send you beers.
