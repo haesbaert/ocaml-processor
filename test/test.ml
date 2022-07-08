@@ -14,4 +14,28 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-let _ = Printf.printf "Nada"
+open Processor
+
+(* Testing is very limited since we can't make many assumptions of
+   where we're running *)
+let _ =
+  assert (Query.cpu_count > 0);
+  assert (Query.core_count > 0);
+  assert (Query.socket_count > 0);
+  assert ((List.length Topology.t) = Query.cpu_count);
+  assert ((List.length (Affinity.get_ids ())) = (List.length (Affinity.get_cpus ())));
+  assert ((List.length (Affinity.get_ids ())) = (List.length Topology.t));
+  assert ((List.length (Affinity.get_ids ())) = Query.cpu_count);
+  (* nop call, just to make sure we don't crash *)
+  Affinity.(set_ids (get_ids ()));
+  Affinity.(set_cpus (get_cpus ()));
+  (* Make sure ids are monotonically increasing *)
+  let _ = List.fold_left
+      (fun last_id cpu ->
+         assert (last_id = (pred cpu.Cpu.id)); succ last_id) (-1) Topology.t
+  in
+  let _ = List.fold_left
+      (fun last_id id ->
+         assert (last_id = (pred id)); succ last_id) (-1) (Affinity.get_ids ())
+  in
+  exit 0

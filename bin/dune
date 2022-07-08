@@ -1,12 +1,5 @@
 (executable
- (public_name ocaml-processor)
- (name main)
- (modules main)
+ (public_name ocaml-processor-dump)
+ (name processor_dump)
+ (modules processor_dump)
  (libraries processor))
-
-(executable
- (public_name ocaml-amd64)
- (enabled_if (= %{architecture} "amd64"))
- (name amd64)
- (modules amd64)
- (libraries amd64))

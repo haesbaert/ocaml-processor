@@ -16,15 +16,8 @@
 
 open Processor
 
-let _ =
-  Printf.printf "We haz %d thread(s) in %d core(s) within %d socket(s)\n%!"
-    Query.cpu_count Query.core_count Query.socket_count;
-  Printf.printf "Pinning us to 0-1\n%!";
-  Affinity.set_ids [0; 1];
-  List.iter (fun cpuid -> Printf.printf "Seen cpu %d\n%!" cpuid) (Affinity.get_ids ());
-  let topo = Topology.t in
-  Printf.printf "topology:\n%!";
-  List.iter Cpu.dump topo;
-  Printf.printf "Pinning only to one thread of each core (smt=0):\n%!";
-  Affinity.set_cpus (Cpu.from_smt 0 topo);
-  List.iter Cpu.dump (Affinity.get_cpus ())
+let _ = 
+  Printf.printf "cpu_count: %d\n" Query.cpu_count;
+  Printf.printf "core_count: %d\n" Query.core_count;
+  Printf.printf "socket_count: %d\n" Query.socket_count;
+  List.iter Cpu.dump Topology.t

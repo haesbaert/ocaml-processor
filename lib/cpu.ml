@@ -33,7 +33,7 @@ let from_socket socket l = List.filter (fun cpu -> cpu.socket = socket) l
 let dump t =
   let s = match t.kind with
       P_core -> "P_core" | E_core -> "E_core" in
-  Printf.printf "id=%d smt=%d core=%d socket=%d kind=%s\n%!"
+  Printf.printf "cpu%d: smt=%d core=%d socket=%d kind=%s\n%!"
     t.id t.smt t.core t.socket s
 
 let make ~kind ~id ~smt ~core ~socket =
