@@ -109,5 +109,6 @@ comfortable windows environment to develop.
 * Cache topology would be welcome as well.
 * CPU model/brand, there is some support but I want to make it right before
 publishing.
+* CI/CD setup.
 
 If you want to work on cache topology, I'll send you beers.
