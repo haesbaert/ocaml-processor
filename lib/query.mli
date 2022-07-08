@@ -13,6 +13,7 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
+(** Query the system for cpu, core, and socket count *)
 
 val cpu_count : int
 (** [cpu_count] is the total number of logical cpus, also sometimes referred as cpu threads. *)
