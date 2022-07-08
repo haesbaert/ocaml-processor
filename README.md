@@ -68,7 +68,7 @@ utop # Processor.Affinity.get_cpus ();;
  {Processor.Cpu.id = 4; kind = Processor.Cpu.P_core; smt = 1; core = 0; socket = 0}]
 ```
 
-### ocaml-processor-dump
+## ocaml-processor-dump
 
 A simple binary called `ocaml-processor-dump` is provided:
 ```
@@ -89,13 +89,13 @@ cpu6: smt=1 core=2 socket=0 kind=P_core
 cpu7: smt=1 core=3 socket=0 kind=P_core
 ```
 
-### Implementation Details
+## Implementation Details
 
 Turns out all of this is harder than it should, there are basically no
 portable APIs and even the consensus of what a CPU thread is, is
 sketchy between different architectures.
 
-#### Linux, FreeBSD
+### Linux, FreeBSD
 
 On AMD64 we visit each CPU, by pinning our current context, and then
 do the whole CPUID dance manually, the only thing we need from the
@@ -111,7 +111,7 @@ Initially I've added support for parsing `/proc/cpuinfo` on Linux for
 other architectures, but the format is not standarized, so it isn't
 worth it.
 
-#### NetBSD, OpenBSD, DragonflyBSD
+### NetBSD, OpenBSD, DragonflyBSD
 
 On these systems `Query` is accurate for `cpu_count`, but
 `thread_count` and `socket_count` will be faked, topology will be
@@ -119,7 +119,7 @@ faked and affinity is a nop. NetBSD and DragonflyBSD could have
 affinity support but I don't want to maintain it. OpenBSD has no
 support for it.
 
-#### Apple/Darwin
+### Apple/Darwin
 
 Apple doesn't support affinity/pinning, so in order to retrieve the
 actual `apicid` in AMD64 we have to go through the horrible `ioreg`
@@ -127,7 +127,7 @@ stuff from Apple, which we do. On Apple ARM64 we also go through
 `ioreg` to retrieve the relationship between `E-cores` and `P-cores`.
 On Apple, `Query` and `Topology` will always be accurate.
 
-### Future Work
+## Future Work
 
 * Windows support, hopefully I work on this when I get a more
 comfortable windows environment to develop.
