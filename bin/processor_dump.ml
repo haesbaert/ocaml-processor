@@ -20,4 +20,7 @@ let _ =
   Printf.printf "cpu_count: %d\n" Query.cpu_count;
   Printf.printf "core_count: %d\n" Query.core_count;
   Printf.printf "socket_count: %d\n" Query.socket_count;
+  Printf.printf "cpus-per-core: %d\n" (Query.cpu_count / Query.core_count);
+  Printf.printf "cpus-per-socket: %d\n" (Query.cpu_count / Query.socket_count);
+  Printf.printf "cores-per-socket: %d\n" (Query.core_count / Query.socket_count);
   List.iter Cpu.dump Topology.t
