@@ -2,7 +2,7 @@
 opam-version: "2.0"
 synopsis: "Processor Topology & Affinity for ocaml."
 description:
-  "Lets you pin current process to sets of CPUs as well as query the system CPU topology."
+  "Exposes processor, CPU Topology and lets you pin the runtime to a set of CPUs."
 maintainer: ["Christiano Haesbaert"]
 authors: ["Christiano Haesbaert"]
 license: "ISC"
@@ -19,7 +19,7 @@ tags: [
   "domain"
 ]
 homepage: "https://github.com/haesbaert/ocaml-processor"
-doc: "https://url/to/documentation"
+doc: "https://haesbaert.github.io/ocaml-processor"
 bug-reports: "https://github.com/haesbaert/ocaml-processor/issues"
 depends: [
   "ocaml"

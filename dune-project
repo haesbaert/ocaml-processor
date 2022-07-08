@@ -13,12 +13,12 @@
 
 (license ISC)
 
-(documentation https://url/to/documentation)
+(documentation https://haesbaert.github.io/ocaml-processor)
 
 (package
  (name processor)
  (synopsis "Processor Topology & Affinity for ocaml.")
- (description "Lets you pin current process to sets of CPUs as well as query the system CPU topology.")
+ (description "Exposes processor, CPU Topology and lets you pin the runtime to a set of CPUs.")
  (depends ocaml dune)
  (tags
   (processor multicore cpu thread core package socket affinity scheduler domain)))
