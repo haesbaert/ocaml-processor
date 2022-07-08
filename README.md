@@ -1,5 +1,7 @@
 # Processor Topology & Affinity for ocaml
 
+[API Online](https://haesbaert.github.io/ocaml-processor/)
+
 This library allows you to query the processor topology as well as set
 the processor affinity for the current process. This library does
 *not* depend on ocaml-5 (Multicore), but it can be used within ocaml-5

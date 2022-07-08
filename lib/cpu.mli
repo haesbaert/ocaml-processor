@@ -15,8 +15,10 @@
  *)
 (** Expresses a logical CPU/thread. *)
 
-type kind = P_core | E_core
-(** The [kind] of a {!Cpu.t}: [Performance] or [Energy Efficient] *)
+type kind =
+  | P_core (** Performance cpu, faster, power hungry one *)
+  | E_core (** Energy efficient, slower, global warming aware one *)
+(** The [kind] of a {!Cpu.t} *)
 
 type t = {
   id      : int;  (** A monotonically increasing id *)
