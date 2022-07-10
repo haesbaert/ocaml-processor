@@ -18,16 +18,7 @@ external get_ids: unit -> int list = "caml_get_affinity"
 external set_ids: int list -> unit = "caml_set_affinity"
 
 let t =
-  (* check where we can run *)
-  let vendor_bytes = Bytes.create 12 in
-  let _, ebx, ecx, edx = Amd64.cpuid 0 in
-  let ebx_bytes = Amd64.bytes_of_register ebx in
-  let ecx_bytes = Amd64.bytes_of_register ecx in
-  let edx_bytes = Amd64.bytes_of_register edx in
-  Bytes.blit ebx_bytes 0 vendor_bytes 0 4;
-  Bytes.blit edx_bytes 0 vendor_bytes 4 4;
-  Bytes.blit ecx_bytes 0 vendor_bytes 8 4;
-  let vendor = Bytes.to_string vendor_bytes in
+  (* save oldset so we can restore later *)
   let oldset = get_ids () in
   let topology = List.map
       (fun (id) ->
@@ -37,7 +28,7 @@ let t =
          let smt, core, socket = Amd64.decompose_apic apicid in
          let _, _, _, edx = Amd64.cpuid 7 in
          let kind =
-           if vendor = "GenuineIntel" then (* only intel has hybrids *)
+           if Amd64.cpu_vendor = "GenuineIntel" then (* only intel has hybrids *)
              let hybrid = (edx land (Int.shift_left 1 15)) <> 0 in
              if not hybrid then
                Cpu.P_core

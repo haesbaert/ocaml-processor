@@ -22,11 +22,17 @@ val cpuid_leaf : int -> int -> (int * int * int * int)
 val cpuid : int -> (int * int * int * int)
 (** [cpuid code] is [cpuid_leaf code 0] *)
 
-val bytes_of_register : int -> bytes
-(** [bytes_of_register register] is the 4 byte representation of
+val register_to_bytes : int -> bytes
+(** [register_to_bytes register] is the 4 byte representation of
     [register] in bytes *)
 
 val decompose_apic : int -> (int * int * int)
 (** [decompose_apic apicid] is the [smt * core * package] id of
     [apicid]. Can throw [invalid_argument] if cpu_vendor is unknown or
     [apicid] is invalid *)
+
+val cpu_vendor : string
+(** [cpu_vendor] is the cpu brand, Genuineintel, AuthenticAMD and so on *)
+
+val cpu_model : string
+(** [cpu_model] model like "Intel(R) Core(TM) i3-10100 CPU @ 3.60GHz" *)
