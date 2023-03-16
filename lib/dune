@@ -10,7 +10,20 @@
    (                -> amd64.nop.ml)))
  (modules cpu query affinity topology ioreg processor)
  (private_modules ioreg)
- (foreign_stubs (language c) (names processor_stubs))
+ (foreign_stubs
+  (language c)
+  (names processor_stubs)
+  (flags
+    :standard
+    "-Wall"
+    ; "-Wstrict-prototypes"
+    ; "-Wmissing-prototypes"
+    ; "-Wmissing-declarations"
+    "-Wshadow"
+    "-Wpointer-arith"
+    "-Wcast-qual"
+    "-Wsign-compare"
+    "-Werror"))
  (c_library_flags (-lpthread)))
 
 (rule
