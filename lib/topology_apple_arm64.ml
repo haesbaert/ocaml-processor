@@ -20,5 +20,5 @@ let t =
       id := succ !id;
       let kind = if ecore = 1 then Cpu.E_core else Cpu.P_core in
       Cpu.make ~id:!id ~kind ~smt:0 ~core ~socket:0)
-    (Cpu_apple_ioreg.fetch ())
+    (Processor_apple_ioreg.fetch ())
 
