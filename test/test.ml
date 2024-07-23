@@ -18,7 +18,7 @@ open Processor
 
 (* Testing is very limited since we can't make many assumptions of
    where we're running *)
-let _ =
+let () =
   assert (Query.cpu_count > 0);
   assert (Query.core_count > 0);
   assert (Query.socket_count > 0);
@@ -30,18 +30,18 @@ let _ =
   Affinity.(set_ids (get_ids ()));
   Affinity.(set_cpus (get_cpus ()));
   (* Make sure ids are monotonically increasing *)
-  let _ =
+  let _last_id : int =
     List.fold_left
       (fun last_id cpu ->
         assert (last_id = pred cpu.Cpu.id);
         succ last_id )
       (-1) Topology.t
   in
-  let _ =
+  let _last_id : int =
     List.fold_left
       (fun last_id id ->
         assert (last_id = pred id);
         succ last_id )
       (-1) (Affinity.get_ids ())
   in
-  exit 0
+  ()
