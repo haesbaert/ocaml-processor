@@ -19,17 +19,27 @@ open Processor
 (* Testing is very limited since we can't make many assumptions of
    where we're running *)
 let () =
+  Format.eprintf "Testing CPU count@\n";
   assert (Query.cpu_count > 0);
+  Format.eprintf "Testing core count@\n";
   assert (Query.core_count > 0);
+  Format.eprintf "Testing socket count@\n";
   assert (Query.socket_count > 0);
+  Format.eprintf "Testing CPU count equals topology@\n";
   assert (List.length Topology.t = Query.cpu_count);
+  Format.eprintf "Testing CPUs cardinal equals Affinity.get_ids@\n";
   assert (List.length (Affinity.get_ids ()) = List.length (Affinity.get_cpus ()));
+  Format.eprintf "Testing topology equals Affinity.get_ids@\n";
   assert (List.length (Affinity.get_ids ()) = List.length Topology.t);
+  Format.eprintf "Testing CPU count equals Affinity.get_ids@\n";
   assert (List.length (Affinity.get_ids ()) = Query.cpu_count);
   (* nop call, just to make sure we don't crash *)
+  Format.eprintf "Testing set_ids@\n";
   Affinity.(set_ids (get_ids ()));
+  Format.eprintf "Testing set_cpus@\n";
   Affinity.(set_cpus (get_cpus ()));
   (* Make sure ids are monotonically increasing *)
+  Format.eprintf "Testing monotonicity of topology@\n";
   let _last_id : int =
     List.fold_left
       (fun last_id cpu ->
@@ -37,6 +47,7 @@ let () =
         succ last_id )
       (-1) Topology.t
   in
+  Format.eprintf "Testing monotonicity of get_ids@\n";
   let _last_id : int =
     List.fold_left
       (fun last_id id ->
