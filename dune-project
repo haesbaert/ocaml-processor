@@ -10,7 +10,7 @@
 
 (authors "Christiano Haesbaert")
 
-(maintainers "Christiano Haesbaert")
+(maintainers "Léo Andrès <contact@ndrs.fr>")
 
 (license ISC)
 
