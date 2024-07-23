@@ -14,8 +14,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-external get_ids: unit -> int list = "caml_get_affinity"
-external set_ids: int list -> unit = "caml_set_affinity"
+external get_ids : unit -> int list = "caml_get_affinity"
+
+external set_ids : int list -> unit = "caml_set_affinity"
 
 let get_cpus () : Cpu.t list =
   let id_list = get_ids () in
@@ -23,4 +24,3 @@ let get_cpus () : Cpu.t list =
 
 let set_cpus (cpu_list : Cpu.t list) : unit =
   set_ids (List.map (fun cpu -> Cpu.id cpu) cpu_list)
-

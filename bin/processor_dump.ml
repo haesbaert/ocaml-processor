@@ -16,7 +16,7 @@
 
 open Processor
 
-let _ = 
+let _ =
   Printf.printf "cpu_count: %d\n" Query.cpu_count;
   Printf.printf "core_count: %d\n" Query.core_count;
   Printf.printf "socket_count: %d\n" Query.socket_count;

@@ -17,7 +17,7 @@
 
     The topology is static and built uppon Module load.
 
-    See {{:https://github.com/haesbaert/ocaml-processor}} for a tutorial. *)
+    See {:https://github.com/haesbaert/ocaml-processor} for a tutorial. *)
 
-val t : Cpu.t list
 (** [t] is the list of all logical cpus in the system. *)
+val t : Cpu.t list

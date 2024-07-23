@@ -14,25 +14,23 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-val cpuid_leaf : int -> int -> (int * int * int * int)
-(** [cpuid_leaf code leaf] is the CPUID instruction with input
-    [code](eax) and leaf(ecx), return is the tuple
-    (eax * ebx * ecx * edx) *)
+(** [cpuid_leaf code leaf] is the CPUID instruction with input [code](eax) and
+    leaf(ecx), return is the tuple (eax * ebx * ecx * edx) *)
+val cpuid_leaf : int -> int -> int * int * int * int
 
-val cpuid : int -> (int * int * int * int)
 (** [cpuid code] is [cpuid_leaf code 0] *)
+val cpuid : int -> int * int * int * int
 
+(** [register_to_bytes register] is the 4 byte representation of [register] in
+    bytes *)
 val register_to_bytes : int -> bytes
-(** [register_to_bytes register] is the 4 byte representation of
-    [register] in bytes *)
 
-val decompose_apic : int -> (int * int * int)
-(** [decompose_apic apicid] is the [smt * core * package] id of
-    [apicid]. Can throw [invalid_argument] if cpu_vendor is unknown or
-    [apicid] is invalid *)
+(** [decompose_apic apicid] is the [smt * core * package] id of [apicid]. Can
+    throw [invalid_argument] if cpu_vendor is unknown or [apicid] is invalid *)
+val decompose_apic : int -> int * int * int
 
-val cpu_vendor : string
 (** [cpu_vendor] is the cpu brand, Genuineintel, AuthenticAMD and so on *)
+val cpu_vendor : string
 
-val cpu_model : string
 (** [cpu_model] model like "Intel(R) Core(TM) i3-10100 CPU @ 3.60GHz" *)
+val cpu_model : string

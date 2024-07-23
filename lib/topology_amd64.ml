@@ -14,35 +14,40 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-external get_ids: unit -> int list = "caml_get_affinity"
-external set_ids: int list -> unit = "caml_set_affinity"
+external get_ids : unit -> int list = "caml_get_affinity"
+
+external set_ids : int list -> unit = "caml_set_affinity"
 
 let t =
   (* save oldset so we can restore later *)
   let oldset = get_ids () in
-  let topology = List.map
-      (fun (id) ->
-         set_ids [id];          (* pin ourselves to one cpu *)
-         let _, ebx, _, _ = Amd64.cpuid 1 in
-         let apicid = Int.shift_right ebx 24 in (* read this cpu apicid *)
-         let smt, core, socket = Amd64.decompose_apic apicid in
-         let _, _, _, edx = Amd64.cpuid 7 in
-         let kind =
-           if Amd64.cpu_vendor = "GenuineIntel" then (* only intel has hybrids *)
-             let hybrid = (edx land (Int.shift_left 1 15)) <> 0 in
-             if not hybrid then
-               Cpu.P_core
-             else
-               let eax, _, _, _ = Amd64.cpuid 0x1A in
-               match (Int.shift_right_logical eax 24) with
-               | 0x20 -> Cpu.E_core
-               | 0x40 -> Cpu.P_core
-               | _    -> Cpu.P_core (* best guess *)
-           else                           (* AMD *)
-             Cpu.P_core
-         in
-         Cpu.make ~id ~kind ~smt ~core ~socket)
+  let topology =
+    List.map
+      (fun id ->
+        set_ids [ id ];
+        (* pin ourselves to one cpu *)
+        let _, ebx, _, _ = Amd64.cpuid 1 in
+        let apicid = Int.shift_right ebx 24 in
+        (* read this cpu apicid *)
+        let smt, core, socket = Amd64.decompose_apic apicid in
+        let _, _, _, edx = Amd64.cpuid 7 in
+        let kind =
+          if Amd64.cpu_vendor = "GenuineIntel" then
+            (* only intel has hybrids *)
+            let hybrid = edx land Int.shift_left 1 15 <> 0 in
+            if not hybrid then Cpu.P_core
+            else
+              let eax, _, _, _ = Amd64.cpuid 0x1A in
+              match Int.shift_right_logical eax 24 with
+              | 0x20 -> Cpu.E_core
+              | 0x40 -> Cpu.P_core
+              | _ -> Cpu.P_core (* best guess *)
+          else (* AMD *)
+            Cpu.P_core
+        in
+        Cpu.make ~id ~kind ~smt ~core ~socket )
       oldset
   in
-  set_ids oldset;               (* restore old set so we can run anywhere *)
+  set_ids oldset;
+  (* restore old set so we can run anywhere *)
   topology

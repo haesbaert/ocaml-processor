@@ -14,4 +14,5 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-external fetch : unit -> (int * int) list = "caml_ioreg_fetch" (* index * apicid *)
+external fetch : unit -> (int * int) list
+  = "caml_ioreg_fetch" (* index * apicid *)

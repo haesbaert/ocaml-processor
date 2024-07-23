@@ -16,20 +16,20 @@
 
 (** Get and Set current process/domain affinity.
 
-    Setting processor affinity (aka pinning) allows you to change the
-    set of logical cpus your process/domain can run on. Changing the
-    affinity is not supported on Apple/Darwin.
+    Setting processor affinity (aka pinning) allows you to change the set of
+    logical cpus your process/domain can run on. Changing the affinity is not
+    supported on Apple/Darwin.
 
-    See {{:https://github.com/haesbaert/ocaml-processor}} for a tutorial. *)
+    See {:https://github.com/haesbaert/ocaml-processor} for a tutorial. *)
 
-val get_cpus : unit -> Cpu.t list
 (** [get_cpus] Retrieves a list of CPUs this process can currently run on *)
+val get_cpus : unit -> Cpu.t list
 
-val set_cpus : Cpu.t list -> unit
 (** [set_cpus cl] Change the set of cpus this process can run on *)
+val set_cpus : Cpu.t list -> unit
 
-val get_ids : unit -> int list
 (** [get_ids] is [get_cpus] with CPU id instead of [Cpu.t] *)
+val get_ids : unit -> int list
 
-val set_ids : int list -> unit
 (** [set_ids idl] is [set_cpus] with CPU id instead of [Cpu.t] *)
+val set_ids : int list -> unit
