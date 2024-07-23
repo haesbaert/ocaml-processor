@@ -1,69 +1,104 @@
 (library
  (name processor)
  (public_name processor)
- (libraries unix str
-  (select ioreg.ml from
+ (libraries
+  unix
+  str
+  (select
+   ioreg.ml
+   from
    (processor_apple_ioreg -> ioreg.default.ml)
-   (                -> ioreg.nop.ml))
-  (select amd64.ml from
-   (amd64           -> amd64.default.ml)
-   (                -> amd64.nop.ml)))
+   (-> ioreg.nop.ml))
+  (select
+   amd64.ml
+   from
+   (amd64 -> amd64.default.ml)
+   (-> amd64.nop.ml)))
  (modules cpu query affinity topology ioreg processor)
  (private_modules ioreg)
  (foreign_stubs
   (language c)
   (names processor_stubs)
   (flags
-    :standard
-    "-Wall"
-    ; "-Wstrict-prototypes"
-    ; "-Wmissing-prototypes"
-    ; "-Wmissing-declarations"
-    "-Wshadow"
-    "-Wpointer-arith"
-    "-Wcast-qual"
-    "-Wsign-compare"
-    "-Werror"))
+   :standard
+   "-Wall"
+   ; "-Wstrict-prototypes"
+   ; "-Wmissing-prototypes"
+   ; "-Wmissing-declarations"
+   "-Wshadow"
+   "-Wpointer-arith"
+   "-Wcast-qual"
+   "-Wsign-compare"
+   "-Werror"))
  (c_library_flags (-lpthread)))
 
 (rule
  (target ioreg.nop.ml)
- (action (bash "touch ioreg.nop.ml")))
+ (action
+  (bash "touch ioreg.nop.ml")))
+
 (rule
  (target amd64.nop.ml)
- (action (bash "touch amd64.nop.ml")))
+ (action
+  (bash "touch amd64.nop.ml")))
 
 (rule
  (target query.ml)
- (enabled_if (= %{system} "macosx"))
- (action (copy query_apple.ml query.ml)))
+ (enabled_if
+  (= %{system} "macosx"))
+ (action
+  (copy query_apple.ml query.ml)))
+
 (rule
  (target query.ml)
- (enabled_if (or
-              (= %{system} "linux")
-              (= %{system} "freebsd")
-              (= %{system} "netbsd")
-              (= %{system} "openbsd")))
- (action (copy query_from_topology.ml query.ml)))
+ (enabled_if
+  (or
+   (= %{system} "linux")
+   (= %{system} "freebsd")
+   (= %{system} "netbsd")
+   (= %{system} "openbsd")))
+ (action
+  (copy query_from_topology.ml query.ml)))
 
 (rule
  (target topology.ml)
- (enabled_if (and (= %{architecture} "amd64")
-              (or (= %{system} "linux") (= %{system} "freebsd"))))
- (action (copy topology_amd64.ml topology.ml)))
+ (enabled_if
+  (and
+   (= %{architecture} "amd64")
+   (or
+    (= %{system} "linux")
+    (= %{system} "freebsd"))))
+ (action
+  (copy topology_amd64.ml topology.ml)))
+
 (rule
  (target topology.ml)
- (enabled_if (and (= %{system} "macosx") (= %{architecture} "amd64")))
- (action (copy topology_apple_amd64.ml topology.ml)))
+ (enabled_if
+  (and
+   (= %{system} "macosx")
+   (= %{architecture} "amd64")))
+ (action
+  (copy topology_apple_amd64.ml topology.ml)))
+
 (rule
  (target topology.ml)
- (enabled_if (and (= %{system} "macosx") (= %{architecture} "arm64")))
- (action (copy topology_apple_arm64.ml topology.ml)))
+ (enabled_if
+  (and
+   (= %{system} "macosx")
+   (= %{architecture} "arm64")))
+ (action
+  (copy topology_apple_arm64.ml topology.ml)))
+
 (rule
  (target topology.ml)
- (enabled_if (or
-              (= %{system} "netbsd")
-              (= %{system} "openbsd")
-              (= %{system} "dragonflybsd")
-              (and (= %{system} "linux") (not (= %{architecture} "amd64")))))
- (action (copy topology_fake.ml topology.ml)))
+ (enabled_if
+  (or
+   (= %{system} "netbsd")
+   (= %{system} "openbsd")
+   (= %{system} "dragonflybsd")
+   (and
+    (= %{system} "linux")
+    (not
+     (= %{architecture} "amd64")))))
+ (action
+  (copy topology_fake.ml topology.ml)))

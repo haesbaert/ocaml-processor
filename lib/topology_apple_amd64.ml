@@ -15,13 +15,14 @@
  *)
 
 let t =
-  let l = List.map
+  let l =
+    List.map
       (fun (_, apic) -> Amd64.decompose_apic apic)
       (Processor_apple_ioreg.fetch ())
   in
   let id = ref (-1) in
-  List.map (fun (smt, core, socket) ->
+  List.map
+    (fun (smt, core, socket) ->
       id := succ !id;
-      Cpu.make ~id:!id ~kind:Cpu.P_core ~smt ~core ~socket)
+      Cpu.make ~id:!id ~kind:Cpu.P_core ~smt ~core ~socket )
     l
-

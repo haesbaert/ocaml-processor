@@ -1,7 +1,8 @@
 (library
  (name amd64)
  (public_name processor.amd64)
- (enabled_if (= %{architecture} "amd64"))
+ (enabled_if
+  (= %{architecture} "amd64"))
  (foreign_stubs
   (language c)
   (names amd64_stubs))

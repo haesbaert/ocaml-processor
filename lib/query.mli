@@ -15,13 +15,15 @@
  *)
 (** Query the system for cpu, core, and socket count. *)
 
+(** [cpu_count] is the total number of logical cpus, also sometimes referred as
+    cpu threads. *)
 val cpu_count : int
-(** [cpu_count] is the total number of logical cpus, also sometimes referred as cpu threads. *)
 
+(** [core_count] is the total number of physical cores, a core might have more
+    than one logical cpu if smt/hyperthreading is available. *)
 val core_count : int
-(** [core_count] is the total number of physical cores, a core might have more than one logical cpu if
-    smt/hyperthreading is available. *)
 
+(** [socket_count] is the total number of physical sockets (processor dies), a
+    socket might have more than one physica l core, which in turn might have
+    more than one logical cpus/threads. *)
 val socket_count : int
-(** [socket_count] is the total number of physical sockets (processor dies), a socket might have more
-    than one physica l core, which in turn might have more than one logical cpus/threads. *)
