@@ -1,3 +1,7 @@
-## v0.1 (2022-07-088)
+## 0.2 - 2024-07-23
 
-* Initial release
+- fixed compilation on macOS
+
+## 0.1 - 2022-07-08
+
+- initial release
