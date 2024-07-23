@@ -32,5 +32,5 @@ val decompose_apic : int -> int * int * int
 (** [cpu_vendor] is the cpu brand, Genuineintel, AuthenticAMD and so on *)
 val cpu_vendor : string
 
-(** [cpu_model] model like "Intel(R) Core(TM) i3-10100 CPU @ 3.60GHz" *)
+(** [cpu_model] model like "Intel(R) Core(TM) i3-10100 CPU \@ 3.60GHz" *)
 val cpu_model : string
