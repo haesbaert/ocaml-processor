@@ -47,7 +47,7 @@
  (enabled_if
   (= %{system} "macosx"))
  (action
-  (copy query_apple.ml query.ml)))
+  (copy# query_apple.ml query.ml)))
 
 (rule
  (target query.ml)
@@ -58,7 +58,7 @@
    (= %{system} "netbsd")
    (= %{system} "openbsd")))
  (action
-  (copy query_from_topology.ml query.ml)))
+  (copy# query_from_topology.ml query.ml)))
 
 (rule
  (target topology.ml)
@@ -69,7 +69,7 @@
     (= %{system} "linux")
     (= %{system} "freebsd"))))
  (action
-  (copy topology_amd64.ml topology.ml)))
+  (copy# topology_amd64.ml topology.ml)))
 
 (rule
  (target topology.ml)
@@ -78,7 +78,7 @@
    (= %{system} "macosx")
    (= %{architecture} "amd64")))
  (action
-  (copy topology_apple_amd64.ml topology.ml)))
+  (copy# topology_apple_amd64.ml topology.ml)))
 
 (rule
  (target topology.ml)
@@ -87,7 +87,7 @@
    (= %{system} "macosx")
    (= %{architecture} "arm64")))
  (action
-  (copy topology_apple_arm64.ml topology.ml)))
+  (copy# topology_apple_arm64.ml topology.ml)))
 
 (rule
  (target topology.ml)
@@ -101,4 +101,4 @@
     (not
      (= %{architecture} "amd64")))))
  (action
-  (copy topology_fake.ml topology.ml)))
+  (copy# topology_fake.ml topology.ml)))
