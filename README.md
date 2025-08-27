@@ -1,10 +1,10 @@
-# Processor Topology & Affinity for ocaml
+# Processor Topology & Affinity for OCaml
 
 [API Online](https://haesbaert.github.io/ocaml-processor/)
 
 This library allows you to query the processor topology as well as set
 the processor affinity for the current process. This library does
-*not* depend on ocaml-5 (Multicore), but it can be used within ocaml-5
+*not* depend on OCaml 5 (Multicore), but it can be used within OCaml 5
 Domains as expected.
 
 The topology can identify individual threads (smt), cores, sockets as
@@ -18,27 +18,28 @@ The library is split into 3 main modules:
 ### Query
 
 Retrieves a count of threads, cores, sockets.
-```
-utop # Processor.Query.cpu_count;;
+
+```console
+# Processor.Query.cpu_count;;
 - : int = 8
-utop # Processor.Query.core_count;;
+# Processor.Query.core_count;;
 - : int = 4
-utop # Processor.Query.socket_count;;
+# Processor.Query.socket_count;;
 - : int = 1
 ```
 
 ### Topology
 
-Build's an actual topology of each CPU, each `Cpu.t` expresses a
+Builds an actual topology of each CPU, each `Cpu.t` expresses a
 logical cpu with a logical id `id`, a thread id `smt`, a core id
 `core`, a socket id `socket` and a `kind` which can be `P-core` or
 `E-core`, which is only relevant for Intel Alder Lake and Apple's
 ARM64 machines.
 
-The topology is built uppon Module load an it's static through the runtime.
+The topology is built upon module load and is static through the runtime.
 
-```
-utop # Processor.Topology.t;;
+```console
+# Processor.Topology.t;;
 - : Processor.Cpu.t list =
 [{Processor.Cpu.id = 0; kind = Processor.Cpu.P_core; smt = 0; core = 0; socket = 0};
  {Processor.Cpu.id = 1; kind = Processor.Cpu.P_core; smt = 0; core = 1; socket = 0};
@@ -60,11 +61,12 @@ fighting for its core resources.
 The affinity must be set on its own running context, so if you are
 using Domains, it must be called individually within each domain.
 
-Say you you want to restrict to running only on the threads of core 0:
-```
-utop # Processor.Affinity.set_cpus (Processor.Cpu.from_core 0 Processor.Topology.t);;
+Say you want to restrict to running only on the threads of core 0:
+
+```console
+# Processor.Affinity.set_cpus (Processor.Cpu.from_core 0 Processor.Topology.t);;
 - : unit = ()
-utop # Processor.Affinity.get_cpus ();;
+# Processor.Affinity.get_cpus ();;
 - : Processor.Cpu.t list =
 [{Processor.Cpu.id = 0; kind = Processor.Cpu.P_core; smt = 0; core = 0; socket = 0};
  {Processor.Cpu.id = 4; kind = Processor.Cpu.P_core; smt = 1; core = 0; socket = 0}]
@@ -73,7 +75,8 @@ utop # Processor.Affinity.get_cpus ();;
 ## ocaml-processor-dump
 
 A simple binary called `ocaml-processor-dump` is provided:
-```
+
+```console
 $ ocaml-processor-dump
 cpu_count: 8
 core_count: 4
@@ -132,7 +135,7 @@ On Apple, `Query` and `Topology` will always be accurate.
 ## Future Work
 
 * Windows support, hopefully I work on this when I get a more
-comfortable windows environment to develop.
+comfortable Windows environment to develop.
 * Cache topology would be welcome as well.
 * CPU model/brand, there is some support but I want to make it right before
 publishing.
