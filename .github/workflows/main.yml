@@ -1,32 +1,70 @@
-name: main
+name: Builds, tests & co
+
 on:
-  pull_request:
-  push:
-  schedule:
-    # Prime the caches every Monday
-    - cron: 0 1 * * MON
+  - push
+  - pull_request
+
+permissions: read-all
+
 jobs:
   build:
     strategy:
       fail-fast: false
       matrix:
-        ocaml-compiler:
-          - "5.2"
-          - "4.14"
         os:
-          - ubuntu-latest       # Linux x86_64
-          - macos-latest        # MacOS x86_64
-          - macos-14            # MacOS ARM64
+          - ubuntu-latest
+          - macos-latest        # macOS arm64
+          - macos-latest-large  # macOS x64
+        ocaml-compiler:
+          - "4"
+          - "5"
+
     runs-on: ${{ matrix.os }}
+
     steps:
-      - name: checkout-code
-        uses: actions/checkout@v4
-      - name: setup-ocaml-${{ matrix.ocaml-compiler }}
+      - name: Checkout tree
+        uses: actions/checkout@v5
+
+      - name: Set-up OCaml
         uses: ocaml/setup-ocaml@v3
         with:
-          opam-pin: false
-          opam-depext: false
           ocaml-compiler: ${{ matrix.ocaml-compiler }}
+
       - run: opam install . --deps-only --with-test
+
       - run: opam exec -- dune build
+
       - run: opam exec -- dune runtest
+
+  lint-doc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tree
+        uses: actions/checkout@v4
+      - name: Set-up OCaml
+        uses: ocaml/setup-ocaml@v3
+        with:
+          ocaml-compiler: "5"
+      - uses: ocaml/setup-ocaml/lint-doc@v3
+
+  lint-fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tree
+        uses: actions/checkout@v4
+      - name: Set-up OCaml
+        uses: ocaml/setup-ocaml@v3
+        with:
+          ocaml-compiler: "5"
+      - uses: ocaml/setup-ocaml/lint-fmt@v3
+
+  lint-opam:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tree
+        uses: actions/checkout@v4
+      - name: Set-up OCaml
+        uses: ocaml/setup-ocaml@v3
+        with:
+          ocaml-compiler: "5"
+      - uses: ocaml/setup-ocaml/lint-opam@v3
