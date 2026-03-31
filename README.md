@@ -132,10 +132,19 @@ stuff from Apple, which we do. On Apple ARM64 we also go through
 `ioreg` to retrieve the relationship between `E-cores` and `P-cores`.
 On Apple, `Query` and `Topology` will always be accurate.
 
+### Windows
+
+On Windows (7 and later) we use `GetLogicalProcessorInformationEx` to
+retrieve the full topology in a single call, avoiding the CPUID walk
+entirely. The OS handles AMD vs Intel differences for us and reports
+cores, sockets, SMT and `EfficiencyClass` which we use to distinguish
+`P-cores` from `E-cores` on hybrid architectures. Affinity uses
+`SetThreadAffinityMask` and `GetProcessAffinityMask`, which limits it
+to a single processor group (64 logical processors). `Query` and
+`Topology` will always be accurate.
+
 ## Future Work
 
-* Windows support, hopefully I work on this when I get a more
-comfortable Windows environment to develop.
 * Cache topology would be welcome as well.
 * CPU model/brand, there is some support but I want to make it right before
 publishing.

@@ -1,8 +1,10 @@
 name: Builds, tests & co
 
 on:
-  - push
-  - pull_request
+  pull_request:
+  push:
+    branches:
+      - main
 
 permissions: read-all
 
@@ -13,11 +15,20 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - macos-latest        # macOS arm64
-          - macos-latest-large  # macOS x64
+          - macos-15            # macOS arm64
+          - macos-15-intel      # macOS x64
+          - windows-latest
         ocaml-compiler:
-          - "4"
           - "5"
+        include:
+          - os: ubuntu-latest
+            ocaml-compiler: "4"
+          - os: macos-15
+            ocaml-compiler: "4"
+          - os: macos-15-intel
+            ocaml-compiler: "4"
+          - os: windows-latest
+            ocaml-compiler: "4"
 
     runs-on: ${{ matrix.os }}
 
@@ -36,35 +47,14 @@ jobs:
 
       - run: opam exec -- dune runtest
 
-  lint-doc:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout tree
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Set-up OCaml
         uses: ocaml/setup-ocaml@v3
         with:
           ocaml-compiler: "5"
       - uses: ocaml/setup-ocaml/lint-doc@v3
-
-  lint-fmt:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout tree
-        uses: actions/checkout@v4
-      - name: Set-up OCaml
-        uses: ocaml/setup-ocaml@v3
-        with:
-          ocaml-compiler: "5"
       - uses: ocaml/setup-ocaml/lint-fmt@v3
-
-  lint-opam:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout tree
-        uses: actions/checkout@v4
-      - name: Set-up OCaml
-        uses: ocaml/setup-ocaml@v3
-        with:
-          ocaml-compiler: "5"
-      - uses: ocaml/setup-ocaml/lint-opam@v3

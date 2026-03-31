@@ -56,7 +56,12 @@
    (= %{system} "linux")
    (= %{system} "freebsd")
    (= %{system} "netbsd")
-   (= %{system} "openbsd")))
+   (= %{system} "openbsd")
+   (= %{system} "mingw64")
+   (= %{system} "win64")
+   (= %{system} "win32")
+   (= %{system} "mingw")
+   (= %{system} "cygwin")))
  (action
   (copy# query.from_topology.ml query.ml)))
 
@@ -88,6 +93,18 @@
    (= %{architecture} "arm64")))
  (action
   (copy# topology.apple_arm64.ml topology.ml)))
+
+(rule
+ (target topology.ml)
+ (enabled_if
+  (or
+   (= %{system} "mingw64")
+   (= %{system} "win64")
+   (= %{system} "win32")
+   (= %{system} "mingw")
+   (= %{system} "cygwin")))
+ (action
+  (copy# topology.windows.ml topology.ml)))
 
 (rule
  (target topology.ml)
